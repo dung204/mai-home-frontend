@@ -78,6 +78,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "jose": "^6.0.10",
     "lucide-react": "^0.486.0",
@@ -138,7 +139,7 @@
     "storybook": "8.6.11",
     "storybook-dark-mode": "^4.0.2",
     "storybook-next-intl": "^1.2.6",
-    "tailwindcss": "^4",
+    "tailwindcss": "^4.1.0",
     "typescript": "^5"
   }
 }

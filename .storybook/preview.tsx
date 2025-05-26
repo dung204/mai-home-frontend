@@ -1,13 +1,11 @@
 import { DocsContainer, DocsContextProps } from '@storybook/blocks';
 import type { Preview } from '@storybook/react';
 import { ThemeVars, create, themes } from '@storybook/theming';
-import { useTheme } from 'next-themes';
-import React, { useEffect } from 'react';
-import { DARK_MODE_EVENT_NAME, useDarkMode } from 'storybook-dark-mode';
+import React from 'react';
+import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 
 import '@/base/styles/globals.css';
 
-import { ThemeProvider } from '../src/base/providers';
 import nextIntl from './next-intl';
 
 const preview: Preview = {
@@ -68,24 +66,6 @@ const preview: Preview = {
     },
     nextIntl,
   },
-  decorators: [
-    (StoryFn) => (
-      <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
-        <ThemeChanger theme={useDarkMode() ? 'dark' : 'light'} />
-        <StoryFn />
-      </ThemeProvider>
-    ),
-  ],
 };
-
-function ThemeChanger({ theme }: { theme: string }) {
-  const { setTheme } = useTheme();
-
-  useEffect(() => {
-    setTheme(theme);
-  }, [setTheme, theme]);
-
-  return null;
-}
 
 export default preview;
