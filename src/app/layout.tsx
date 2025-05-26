@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale } from 'next-intl/server';
 
-import { Footer } from '@/base/components/layout/footer';
-import { Header } from '@/base/components/layout/header';
 import { ScrollArea } from '@/base/components/ui/scroll-area';
 import { ScrollToTopButton } from '@/base/components/ui/scroll-to-top-button';
 import { Toaster } from '@/base/components/ui/toaster';
@@ -30,9 +28,7 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <QueryProvider>
             <ScrollArea className="app-scroll-area h-screen">
-              <Header />
-              <main>{children}</main>
-              <Footer />
+              {children}
               <ScrollToTopButton />
             </ScrollArea>
             <Toaster position="top-right" richColors />
