@@ -24,7 +24,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className="antialiased">
+      <body className="overflow-hidden antialiased">
         <NextIntlClientProvider>
           <QueryProvider>
             <ScrollArea className="app-scroll-area h-screen">

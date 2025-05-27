@@ -1,8 +1,7 @@
 import { ChevronsRight } from 'lucide-react';
 
 import { Button } from '@/base/components/ui/button';
-
-import { PropertyCarousel } from './property-carousel';
+import { PropertyCarousel } from '@/modules/properties';
 
 export function TopMiniApartmentBuildings() {
   return (

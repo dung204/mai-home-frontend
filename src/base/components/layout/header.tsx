@@ -24,72 +24,83 @@ export function Header() {
           <div className="flex items-center gap-4">
             <Input
               placeholder="Tìm theo khu vực"
-              className="bg-primary/15 text-muted-foreground rounded-full p-6 text-lg focus-visible:ring-0"
+              className="bg-primary/15 text-muted-foreground rounded-full p-6 text-base! focus-visible:ring-0"
             />
-            <Button variant="outline" className="rounded-full px-4! py-6!">
+            <Button variant="outline" className="rounded-full px-4! py-6! text-base">
               <FunnelIcon />
               Bộ lọc
             </Button>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" className="rounded-full px-4! py-6!">
+          <Button variant="ghost" className="rounded-full px-4! py-6! text-base">
             <UserPlusIcon />
             Đăng ký
           </Button>
-          <Button variant="ghost" className="rounded-full px-4! py-6!">
+          <Button variant="ghost" className="rounded-full px-4! py-6! text-base">
             <LogInIcon />
             Đăng nhập
           </Button>
-          <Button className="rounded-full px-4! py-6!">
+          <Button className="rounded-full px-4! py-6! text-base">
             <FilePlus2Icon />
             Đăng tin
           </Button>
         </div>
       </div>
       <div className="m-auto flex max-w-6xl items-center gap-12">
-        <Button
-          variant={'link'}
-          className={cn('py-7! text-black no-underline! underline-offset-[22px]', {
-            'text-primary underline!':
-              pathname === '/properties' || searchParams.get('type') === 'room',
-          })}
-        >
-          Phòng trọ
-        </Button>
-        <Button
-          variant={'link'}
-          className={cn('py-7! text-black no-underline! underline-offset-[22px]', {
-            'text-primary underline!':
-              pathname === '/properties' || searchParams.get('type') === 'house',
-          })}
-        >
-          Nhà Nguyên Căn
-        </Button>
-        <Button
-          variant={'link'}
-          className={cn('py-7! text-black no-underline! underline-offset-[22px]', {
-            'text-primary underline!':
-              pathname === '/properties' || searchParams.get('type') === 'apartment',
-          })}
-        >
-          Chung Cư Mini
-        </Button>
-        <Button
-          variant={'link'}
-          className={cn('py-7! text-black no-underline! underline-offset-[22px]', {
-            'text-primary underline!':
-              pathname === '/properties' || searchParams.get('type') === 'shared',
-          })}
-        >
-          Ở Ghép
-        </Button>
+        <Link href="/properties?type=room">
+          <Button
+            variant={'link'}
+            className={cn('py-7! text-base text-black no-underline! underline-offset-[22px]', {
+              'text-primary underline!':
+                pathname === '/properties' && searchParams.get('type') === 'room',
+            })}
+          >
+            Phòng trọ
+          </Button>
+        </Link>
+        <Link href="/properties?type=house">
+          <Button
+            variant={'link'}
+            className={cn('py-7! text-base text-black no-underline! underline-offset-[22px]', {
+              'text-primary underline!':
+                pathname === '/properties' && searchParams.get('type') === 'house',
+            })}
+          >
+            Nhà Nguyên Căn
+          </Button>
+        </Link>
+        <Link href="/properties?type=apartment">
+          <Button
+            variant={'link'}
+            className={cn('py-7! text-base text-black no-underline! underline-offset-[22px]', {
+              'text-primary underline!':
+                pathname === '/properties' && searchParams.get('type') === 'apartment',
+            })}
+          >
+            Chung Cư Mini
+          </Button>
+        </Link>
+        <Link href="/properties?type=shared">
+          <Button
+            variant={'link'}
+            className={cn('py-7! text-base text-black no-underline! underline-offset-[22px]', {
+              'text-primary underline!':
+                pathname === '/properties' && searchParams.get('type') === 'shared',
+            })}
+          >
+            Ở Ghép
+          </Button>
+        </Link>
         <Link href="/services">
           <Button
             variant={'link'}
-            className={cn('border-primary py-7! text-black no-underline! underline-offset-[22px]', {
-              'text-primary underline!': pathname === '/services',
-            })}
+            className={cn(
+              'border-primary py-7! text-base text-black no-underline! underline-offset-[22px]',
+              {
+                'text-primary underline!': pathname === '/services',
+              },
+            )}
           >
             Các Dịch Vụ Hỗ Trợ
           </Button>
