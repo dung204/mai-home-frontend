@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
+import { AuthDialog } from '@/modules/auth';
 
 import { LatestPosts } from '../components/latest-posts';
 import { TopMiniApartmentBuildings } from '../components/top-mini-apartment-buildings';
@@ -85,6 +86,7 @@ export function HomePage() {
           </CardContent>
         </Card>
       </div>
+      <AuthDialog />
     </>
   );
 }

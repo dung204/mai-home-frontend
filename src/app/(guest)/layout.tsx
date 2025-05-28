@@ -5,10 +5,11 @@ import { PropsWithChildren } from 'react';
 import { Footer } from '@/base/components/layout/footer';
 import { Header } from '@/base/components/layout/header';
 import { Card, CardContent } from '@/base/components/ui/card';
+import { AuthDialogProvider } from '@/base/providers';
 
 export default function GuestLayout({ children }: PropsWithChildren) {
   return (
-    <>
+    <AuthDialogProvider>
       <Header />
       <main>
         <div className="bg-primary/10 flex flex-col gap-16">
@@ -32,6 +33,6 @@ export default function GuestLayout({ children }: PropsWithChildren) {
         </div>
       </main>
       <Footer />
-    </>
+    </AuthDialogProvider>
   );
 }

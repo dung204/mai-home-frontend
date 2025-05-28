@@ -47,7 +47,7 @@ export function Footer() {
           <div className="col-span-1 flex flex-col gap-4">
             <h3 className="text-lg font-semibold uppercase">Theo dõi Maihome</h3>
             <div className="flex flex-wrap items-center gap-8">
-              <Image src="/facebook-logo.png" alt="Facebook" width={50} height={50}></Image>
+              <Image src="/facebook-logo.svg" alt="Facebook" width={50} height={50}></Image>
               <Image src="/zalo-logo.png" alt="Zalo" width={50} height={50}></Image>
             </div>
           </div>
