@@ -1,4 +1,7 @@
+'use client';
+
 import { ChevronRight } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
@@ -11,12 +14,22 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/base/components/ui/pagination';
-import { Skeleton } from '@/base/components/ui/skeleton';
 import { cn } from '@/base/lib';
 
+import { HighlightedNews } from '../components/highlighted-news';
+import { HighlightedProperties } from '../components/highlighted-properties';
 import { HorizontalPropertyCard } from '../components/property-card';
 
 export function PropertiesPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const navigateToView = (view: 'recommended' | 'latest') => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('view', view);
+    router.push(url.toString());
+  };
+
   return (
     <div className="m-auto flex w-6xl flex-col gap-16 pt-[182px]">
       <div className="grid grid-cols-3 gap-6">
@@ -25,16 +38,18 @@ export function PropertiesPage() {
             <Button
               variant={'link'}
               className={cn('py-0! text-base text-black no-underline! underline-offset-8', {
-                'text-primary underline!': false,
+                'text-primary underline!': searchParams.get('view') === 'recommended',
               })}
+              onClick={() => navigateToView('recommended')}
             >
               Đề Xuất
             </Button>
             <Button
               variant={'link'}
               className={cn('py-0! text-base text-black no-underline! underline-offset-8', {
-                'text-primary underline!': false,
+                'text-primary underline!': searchParams.get('view') === 'latest',
               })}
+              onClick={() => navigateToView('latest')}
             >
               Mới Đăng
             </Button>
@@ -108,47 +123,8 @@ export function PropertiesPage() {
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent>
-              <div className="flex flex-col gap-6">
-                <h2 className="text-lg font-semibold">Tin nổi bật</h2>
-                <div className="flex flex-col gap-4">
-                  {Array.from({ length: 4 }).map((_, index) => (
-                    <div className="flex gap-3.5" key={`highlighted-property-${index}`}>
-                      <div className="aspect-square h-20">
-                        <Skeleton className="size-full" />
-                      </div>
-                      <div className="flex w-full flex-col gap-1.5">
-                        <Skeleton className="h-[1lh] w-full" />
-                        <Skeleton className="h-[1lh] w-2/3" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <div className="flex flex-col gap-6">
-                <h2 className="text-lg font-semibold">Có thể bạn quan tâm</h2>
-                <div className="flex flex-col gap-1">
-                  {Array.from({ length: 2 }).map((_, index) => (
-                    <Button
-                      variant="link"
-                      className="col-span-1 p-0! text-base"
-                      key={`interest-news-${index}`}
-                    >
-                      <ChevronRight />
-                      <span className="truncate">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      </span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <HighlightedProperties />
+          <HighlightedNews />
         </div>
       </div>
     </div>

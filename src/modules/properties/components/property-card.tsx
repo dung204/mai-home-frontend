@@ -87,7 +87,7 @@ export function HorizontalPropertyCard() {
 
 export function VerticalPropertyCard() {
   return (
-    <Card className="pt-0">
+    <Card className="overflow-hidden pt-0">
       <div className="h-52 w-full">
         <Skeleton className="size-full rounded-none" />
       </div>
