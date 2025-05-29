@@ -32,7 +32,11 @@ export default function GuestLayout({ children }: PropsWithChildren) {
           </div>
         </div>
       </main>
-      <Footer />
+      <div className="bg-primary/55">
+        <div className="m-auto w-6xl">
+          <Footer />
+        </div>
+      </div>
     </AuthDialogProvider>
   );
 }

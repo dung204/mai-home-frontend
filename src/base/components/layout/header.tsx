@@ -1,20 +1,19 @@
 'use client';
 
-import { FilePlus2Icon, FunnelIcon, LogInIcon, UserPlusIcon } from 'lucide-react';
+import { FilePlus2Icon, FunnelIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { cn } from '@/base/lib';
-import { useAuthDialog } from '@/base/providers';
 
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { UserActions } from './user-actions';
 
 export function Header() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { setOpen, setMode, setVersion } = useAuthDialog();
 
   return (
     <header className="fixed top-0 left-0 z-50 flex w-full flex-col bg-white shadow-md">
@@ -35,30 +34,7 @@ export function Header() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            className="rounded-full px-4! py-6! text-base"
-            onClick={() => {
-              setVersion((prev) => prev + 1);
-              setMode('register');
-              setOpen(true);
-            }}
-          >
-            <UserPlusIcon />
-            Đăng ký
-          </Button>
-          <Button
-            variant="ghost"
-            className="rounded-full px-4! py-6! text-base"
-            onClick={() => {
-              setVersion((prev) => prev + 1);
-              setMode('login');
-              setOpen(true);
-            }}
-          >
-            <LogInIcon />
-            Đăng nhập
-          </Button>
+          <UserActions />
           <Button className="rounded-full px-4! py-6! text-base">
             <FilePlus2Icon />
             Đăng tin
