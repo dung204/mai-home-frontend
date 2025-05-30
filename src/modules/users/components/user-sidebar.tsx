@@ -18,15 +18,17 @@ import { Button } from '@/base/components/ui/button';
 import { Separator } from '@/base/components/ui/separator';
 import { Skeleton } from '@/base/components/ui/skeleton';
 import { cn } from '@/base/lib';
+import { useConfirmLogoutDialog } from '@/base/providers';
 
 export function UserSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { setOpen } = useConfirmLogoutDialog();
 
   return (
     <aside className="fixed top-[87px] left-0 h-max w-[300px] bg-white shadow-md">
       <div className="flex flex-col gap-6 p-5">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <Avatar className="size-14">
             <AvatarFallback>
               <Skeleton className="size-full" />
@@ -85,6 +87,12 @@ export function UserSidebar() {
           <Button
             variant="ghost"
             className="hover:text-primary focus-visible:text-primary w-max p-0! hover:bg-transparent focus-visible:bg-transparent"
+            onClick={(e) => {
+              if (!pathname.startsWith('/user/account')) {
+                e.preventDefault();
+                router.push('/user/account/profile');
+              }
+            }}
           >
             <UserIcon />
             Quản lý tài khoản
@@ -92,6 +100,7 @@ export function UserSidebar() {
           <Button
             variant="ghost"
             className="hover:text-danger/70 focus-visible:text-danger/70 text-danger w-max p-0! hover:bg-transparent focus-visible:bg-transparent"
+            onClick={() => setOpen(true)}
           >
             <LogOutIcon />
             Đăng xuất

@@ -5,7 +5,7 @@ import { getLocale } from 'next-intl/server';
 import { ScrollArea } from '@/base/components/ui/scroll-area';
 import { ScrollToTopButton } from '@/base/components/ui/scroll-to-top-button';
 import { Toaster } from '@/base/components/ui/toaster';
-import { QueryProvider } from '@/base/providers';
+import { ConfirmLogoutDialogProvider, QueryProvider } from '@/base/providers';
 import '@/base/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -28,8 +28,10 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <QueryProvider>
             <ScrollArea className="app-scroll-area h-screen">
-              {children}
-              <ScrollToTopButton />
+              <ConfirmLogoutDialogProvider>
+                {children}
+                <ScrollToTopButton />
+              </ConfirmLogoutDialogProvider>
             </ScrollArea>
             <Toaster position="top-right" richColors />
           </QueryProvider>

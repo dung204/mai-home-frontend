@@ -339,7 +339,8 @@ type FormFieldSpec<TFieldValues extends FieldValues = FieldValues> = {
 );
 
 interface FormProps<TFieldValues extends FieldValues, TTransformedValues> {
-  schema: z.ZodObject<z.ZodRawShape, 'strip', z.ZodTypeAny, TTransformedValues, TFieldValues>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema: z.ZodSchema<TTransformedValues, any, TFieldValues>;
   fields: FormFieldSpec<TFieldValues>[];
   onSuccessSubmit: SubmitHandler<TTransformedValues>;
   onErrorSubmit?: SubmitErrorHandler<TFieldValues>;
@@ -365,7 +366,7 @@ function Form<TFieldValues extends FieldValues, TTransformedValues>({
 }: FormProps<TFieldValues, TTransformedValues>) {
   const form = useForm({
     resolver: zodResolver(schema),
-    defaultValues: getDefaultValues(schema, defaultValues),
+    defaultValues: getDefaultValues(schema._def.schema ?? schema, defaultValues),
   });
   const t = useTranslations(i18nNamespace);
 
@@ -382,7 +383,9 @@ function Form<TFieldValues extends FieldValues, TTransformedValues>({
           const Control = getFormControl(formField);
           const Description = InternalFormDescription;
           const Message = InternalFormMessage;
-          const isFieldRequired = !(schema.shape[formField.name] instanceof z.ZodOptional);
+          const isFieldRequired = !(
+            (schema._def.schema ?? schema).shape[formField.name] instanceof z.ZodOptional
+          );
 
           return (
             <InternalFormField key={formField.name} name={formField.name}>
@@ -979,7 +982,9 @@ function InternalFormMessage({ className, ...props }: React.ComponentProps<'p'>)
   const t = useTranslations(i18nNamespace);
 
   const body = error
-    ? t(`fields.${name}.errors.${error.type}` as Parameters<typeof t>[0])
+    ? t.has(`fields.${name}.errors.${error.type}` as Parameters<typeof t>[0])
+      ? t(`fields.${name}.errors.${error.type}` as Parameters<typeof t>[0])
+      : error.message
     : props.children;
 
   if (!body) {

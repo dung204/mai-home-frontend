@@ -1,7 +1,7 @@
 'use client';
 
 import { ClassValue } from 'clsx';
-import { Eye, EyeOff, LockKeyhole } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { ComponentProps, useState } from 'react';
 
 import { Button } from '@/base/components/ui/button';
@@ -30,13 +30,12 @@ export function PasswordInput({
   return (
     <div
       className={cn(
-        'border-input flex items-center rounded-md border px-4 pr-2 transition-all',
+        'border-input flex items-center rounded-md border transition-all',
         'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
         'has-[input[aria-invalid="true"]]:ring-danger/20 dark:has-[input[aria-invalid="true"]]:ring-danger/40 has-[input[aria-invalid="true"]]:border-danger',
         classNames?.container,
       )}
     >
-      <LockKeyhole />
       <Input
         type={showPassword ? 'text' : 'password'}
         className={cn(

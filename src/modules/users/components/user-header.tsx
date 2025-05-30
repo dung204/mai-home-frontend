@@ -24,8 +24,11 @@ import {
   DropdownMenuTrigger,
 } from '@/base/components/ui/dropdown-menu';
 import { Skeleton } from '@/base/components/ui/skeleton';
+import { useConfirmLogoutDialog } from '@/base/providers';
 
 export function UserHeader() {
+  const { setOpen } = useConfirmLogoutDialog();
+
   return (
     <header className="fixed top-0 left-0 z-50 flex w-full flex-col bg-[#0E4DB3] text-white shadow-md">
       <div className="border-muted-foreground/45 flex items-center justify-between border-b px-8">
@@ -157,7 +160,10 @@ export function UserHeader() {
                   </Button>
                   Quản lý tài khoản
                 </div>
-                <div className="text-danger flex w-max cursor-pointer items-center gap-4 font-medium">
+                <div
+                  className="text-danger flex w-max cursor-pointer items-center gap-4 font-medium"
+                  onClick={() => setOpen(true)}
+                >
                   <Button variant="ghost" className="bg-accent rounded-full" size="icon">
                     <LogOutIcon />
                   </Button>
