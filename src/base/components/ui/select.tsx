@@ -15,6 +15,7 @@ import {
 } from '@/base/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/base/components/ui/popover';
 import { cn } from '@/base/lib';
+import { StringUtils } from '@/base/utils';
 
 export type SelectOption = {
   value: string;
@@ -141,7 +142,7 @@ export function Select({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -211,7 +212,9 @@ export function Select({
                 .filter(
                   (option) =>
                     searchTerm === '' ||
-                    option.label.toLowerCase().includes(searchTerm.toLowerCase()),
+                    StringUtils.unaccent(option.label)
+                      .toLowerCase()
+                      .includes(StringUtils.unaccent(searchTerm).toLowerCase()),
                 )
                 .map((option) => (
                   <CommandItem

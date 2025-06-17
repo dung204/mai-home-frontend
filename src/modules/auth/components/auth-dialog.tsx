@@ -1,6 +1,7 @@
 'use client';
 
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ComponentProps, useState } from 'react';
@@ -20,6 +21,7 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
   const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>(
     initialMode ?? 'login',
   );
+  const queryClient = useQueryClient();
 
   return (
     <Dialog {...props}>
@@ -35,17 +37,41 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
             <div className="flex w-full flex-col">
               <p className="text-xl font-medium">Xin chào bạn</p>
               <h2 className="text-2xl font-bold capitalize">{getTitle(mode)}</h2>
-              <section className="mt-6 mb-2">{renderForm(mode, setMode)}</section>
+              <section className="mt-6 mb-2">
+                {(() => {
+                  switch (mode) {
+                    case 'login':
+                      return (
+                        <LoginForm
+                          onForgotPassword={() => setMode('forgot-password')}
+                          onLoginSuccess={() => {
+                            props.onOpenChange?.(false);
+                            queryClient.invalidateQueries({ queryKey: ['users', 'profile'] });
+                          }}
+                        />
+                      );
+                    case 'register':
+                      return (
+                        <RegisterForm
+                          onRegisterSuccess={() => {
+                            props.onOpenChange?.(false);
+                            queryClient.invalidateQueries({ queryKey: ['users', 'profile'] });
+                          }}
+                        />
+                      );
+                    case 'forgot-password':
+                      return <ForgotPasswordForm />;
+                    default:
+                      return null;
+                  }
+                })()}
+              </section>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                   <div className="border-border w-full border"></div>
                   <p className="text-muted-foreground text-lg font-medium">Hoặc</p>
                   <div className="border-border w-full border"></div>
                 </div>
-                <Button variant="outline" size="lg" className="gap-4 py-8 text-base">
-                  <Image src="/facebook-logo.svg" alt="Facebook logo" width={34} height={34} />
-                  Đăng nhập với Facebook
-                </Button>
                 <Button variant="outline" size="lg" className="gap-4 py-8 text-base">
                   <Image src="/google-logo.svg" alt="Google logo" width={34} height={34} />
                   Đăng nhập với Google
@@ -99,22 +125,6 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
       </DialogContent>
     </Dialog>
   );
-}
-
-function renderForm(
-  mode: 'login' | 'register' | 'forgot-password',
-  setMode: (mode: 'login' | 'register' | 'forgot-password') => void,
-) {
-  switch (mode) {
-    case 'login':
-      return <LoginForm onForgotPassword={() => setMode('forgot-password')} />;
-    case 'register':
-      return <RegisterForm />;
-    case 'forgot-password':
-      return <ForgotPasswordForm />;
-    default:
-      return null;
-  }
 }
 
 function getTitle(mode: 'login' | 'register' | 'forgot-password') {

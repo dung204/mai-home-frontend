@@ -1,7 +1,7 @@
 import { HttpClient } from '@/base/lib';
 import { CommonSearchParams, SuccessResponse } from '@/base/types';
 
-import { CreateUserSchema, UpdateUserSchema, User } from '../types';
+import { UpdateUserSchema, User } from '../types';
 
 class UserService extends HttpClient {
   constructor() {
@@ -10,6 +10,12 @@ class UserService extends HttpClient {
 
   public getUserProfile() {
     return this.get<SuccessResponse<User>>('/users/profile', {
+      isPrivateRoute: true,
+    });
+  }
+
+  public updateUserProfile(payload: UpdateUserSchema) {
+    return this.patch<SuccessResponse<User>>(`/users/profile`, payload, {
       isPrivateRoute: true,
     });
   }
@@ -28,10 +34,6 @@ class UserService extends HttpClient {
 
   public getUserById(id: string) {
     return this.get<SuccessResponse<User>>(`/users/${id}`);
-  }
-
-  public createNewUser(payload: CreateUserSchema) {
-    return this.post<SuccessResponse<User>>('/users', payload);
   }
 
   public updateUser(id: string) {

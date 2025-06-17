@@ -18,7 +18,7 @@ interface PasswordInputProps extends Omit<ComponentProps<typeof Input>, 'type' |
 }
 
 export function PasswordInput({
-  classNames,
+  classNames = {},
   defaultShowPassword,
   disabled,
   ...props
@@ -33,14 +33,14 @@ export function PasswordInput({
         'border-input flex items-center rounded-md border transition-all',
         'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
         'has-[input[aria-invalid="true"]]:ring-danger/20 dark:has-[input[aria-invalid="true"]]:ring-danger/40 has-[input[aria-invalid="true"]]:border-danger',
-        classNames?.container,
+        classNames.container,
       )}
     >
       <Input
         type={showPassword ? 'text' : 'password'}
         className={cn(
           'rounded-none border-0 shadow-none ring-0 focus-visible:ring-0',
-          classNames?.input,
+          classNames.input,
         )}
         disabled={disabled}
         {...props}

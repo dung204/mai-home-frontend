@@ -1,4 +1,13 @@
-import { PropertyDetailsPage } from '@/modules/properties';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { Metadata } from 'next';
+import { Suspense, cache } from 'react';
+
+import { getQueryClient } from '@/base/lib';
+import {
+  PropertyDetailsPage,
+  PropertyDetailsPageSkeleton,
+  propertiesService,
+} from '@/modules/properties';
 
 type PageProps = {
   params: Promise<{
@@ -6,8 +15,49 @@ type PageProps = {
   }>;
 };
 
+const fetchProperty = cache((id: string) => propertiesService.getPropertyById(id));
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const { data: property } = await fetchProperty(id);
+
+  return {
+    title: property.title,
+    description: property.description,
+    openGraph: {
+      title: property.title,
+      description: property.description,
+      images: [
+        {
+          url: property.images[0] || '',
+          width: 800,
+          height: 600,
+          alt: property.title,
+        },
+      ],
+    },
+    twitter: {
+      title: property.title,
+      description: property.description,
+      images: [property.images[0] || ''],
+    },
+  };
+}
+
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
+  const queryClient = getQueryClient();
 
-  return <PropertyDetailsPage id={id} />;
+  await queryClient.prefetchQuery({
+    queryKey: ['property', id],
+    queryFn: () => propertiesService.getPropertyById(id),
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Suspense fallback={<PropertyDetailsPageSkeleton />}>
+        <PropertyDetailsPage id={id} />
+      </Suspense>
+    </HydrationBoundary>
+  );
 }

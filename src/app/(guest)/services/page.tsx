@@ -1,7 +1,7 @@
 import { ServicesPage } from '@/modules/services';
 
 export const metadata = {
-  title: 'Các Dịch Vụ Hỗ Trợ',
+  title: 'Bảng giá đăng tin',
 };
 
 export default function Page() {

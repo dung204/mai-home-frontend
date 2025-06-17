@@ -4,7 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
+import { Footer } from '@/base/components/layout/footer';
 import { Button } from '@/base/components/ui/button';
+import { ScrollArea } from '@/base/components/ui/scroll-area';
+import { ScrollToTopButton } from '@/base/components/ui/scroll-to-top-button';
 import { cn } from '@/base/lib';
 
 export function TransactionsLayout({ children }: PropsWithChildren) {
@@ -12,7 +15,7 @@ export function TransactionsLayout({ children }: PropsWithChildren) {
 
   return (
     <>
-      <section className="fixed top-[87px] right-0 left-[300px] z-50 flex flex-col gap-4 bg-white px-10 pt-6 shadow-md">
+      <section className="z-50 flex flex-col gap-4 bg-white px-10 pt-6 shadow-md">
         <h1 className="text-2xl font-medium">Quản lý giao dịch</h1>
         <div className="flex gap-10">
           <Link href="/user/transactions/top-up">
@@ -56,7 +59,17 @@ export function TransactionsLayout({ children }: PropsWithChildren) {
           </Link>
         </div>
       </section>
-      <div className="mt-[128px]">{children}</div>
+      <ScrollArea type="always" className="app-scroll-area grow">
+        <section className="absolute inset-0">
+          <div className="mx-auto my-10 flex w-3xl flex-col gap-8">{children}</div>
+          <div className="w-full px-10">
+            <div className="border-muted-foreground size-full border-t">
+              <Footer />
+            </div>
+          </div>
+        </section>
+        <ScrollToTopButton />
+      </ScrollArea>
     </>
   );
 }

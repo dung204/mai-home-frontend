@@ -32,30 +32,7 @@
   },
   "modules": {
     "auth": {
-      "components": {
-        "LoginForm": {
-          "fields": {
-            "email": {
-              "label": "Email",
-              "placeholder": "Enter your email",
-              "errors": {
-                "too_small": "Email is required",
-                "invalid_string": "Invalid email address"
-              }
-            },
-            "password": {
-              "label": "Password",
-              "placeholder": "Enter your password",
-              "errors": {
-                "too_small": "Password must be longer than or equal to 8 characters"
-              }
-            }
-          },
-          "errors": {
-            "401": "Email or password is incorrect"
-          }
-        }
-      },
+      "components": {},
       "pages": {}
     }
   }

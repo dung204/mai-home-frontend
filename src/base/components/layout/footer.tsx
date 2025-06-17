@@ -46,7 +46,9 @@ export function Footer() {
         <div className="col-span-1 flex flex-col gap-4">
           <h3 className="text-lg font-semibold uppercase">Theo dõi Maihome</h3>
           <div className="flex flex-wrap items-center gap-8">
-            <Image src="/facebook-logo.svg" alt="Facebook" width={50} height={50}></Image>
+            <Link href="https://www.facebook.com/Maihomeforyou" target="_blank">
+              <Image src="/facebook-logo.svg" alt="Facebook" width={50} height={50}></Image>
+            </Link>
             <Image src="/zalo-logo.png" alt="Zalo" width={50} height={50}></Image>
           </div>
         </div>
@@ -56,7 +58,7 @@ export function Footer() {
         <h3 className="text-lg font-semibold uppercase">Thuộc dự án của Hoa Mai Group</h3>
         <p>Khu Công Nghệ Cao Hòa Lạc, km 29, Đại lộ, Thăng Long, Hà Nội</p>
         <p>
-          Email: <Link href="mailto:maihome@gmail.com">maihome@gmail.com</Link>
+          Email: <Link href="mailto:contact@maihome.info.vn">contact@maihome.info.vn</Link>
         </p>
         <p>
           Hotline: <Link href="tel:090001005">090001005</Link>

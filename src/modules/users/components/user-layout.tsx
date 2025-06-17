@@ -1,25 +1,16 @@
 import { PropsWithChildren } from 'react';
 
-import { Footer } from '@/base/components/layout/footer';
-
 import { UserHeader } from './user-header';
 import { UserSidebar } from './user-sidebar';
 
 export function UserLayout({ children }: PropsWithChildren) {
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <UserHeader />
-      <main className="bg-accent mt-[87px] min-h-[calc(100vh-87px)]">
+      <main className="bg-accent flex grow">
         <UserSidebar />
-        <div className="ml-[300px] flex grow flex-col">
-          {children}
-          <div className="w-full px-10">
-            <div className="border-muted-foreground size-full border-t">
-              <Footer />
-            </div>
-          </div>
-        </div>
+        <div className="flex grow flex-col">{children}</div>
       </main>
-    </>
+    </div>
   );
 }

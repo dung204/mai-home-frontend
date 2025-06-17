@@ -1,7 +1,5 @@
-import { CheckIcon, ChevronsRight } from 'lucide-react';
-import Image from 'next/image';
+import { CheckIcon } from 'lucide-react';
 
-import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import {
   Table,
@@ -14,7 +12,7 @@ import {
 
 export function ServicesPage() {
   return (
-    <div className="m-auto flex w-6xl flex-col gap-16 pt-[206px]">
+    <div className="m-auto mt-12 flex w-6xl flex-col gap-16">
       <Card>
         <CardContent className="flex flex-col items-center justify-center gap-10">
           <h2 className="text-2xl font-semibold uppercase">Bảng giá đăng tin</h2>
@@ -22,109 +20,58 @@ export function ServicesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead className="bg-accent"></TableHead>
-                <TableHead className="border-border border bg-[#B9E7DD] p-3.5 text-center text-lg font-bold text-white">
+                <TableHead className="border-border bg-danger border p-3.5 text-center text-lg font-bold text-white">
+                  Tin VIP Pro
+                </TableHead>
+                <TableHead className="border-border bg-primary border p-3.5 text-center text-lg font-bold text-white">
+                  Tin VIP
+                </TableHead>
+                <TableHead className="border-border border bg-[#2175be] p-3.5 text-center text-lg font-bold text-white">
                   Tin thường
-                </TableHead>
-                <TableHead className="border-border border bg-[#90CFD4] p-3.5 text-center text-lg font-bold text-white">
-                  Tin VIP 1
-                </TableHead>
-                <TableHead className="border-border border bg-[#57B0C2] p-3.5 text-center text-lg font-bold text-white">
-                  Tin VIP 2
-                </TableHead>
-                <TableHead className="border-border border bg-[#388FA3] p-3.5 text-center text-lg font-bold text-white">
-                  Tin VIP 3
-                </TableHead>
-                <TableHead className="border-border border bg-[#236D88] p-3.5 text-center text-lg font-bold text-white">
-                  Tin nổi bật
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell className="bg-accent p-3.5">Giá ngày</TableCell>
+                <TableCell className="bg-accent p-3.5">Giá đăng/gia hạn tin</TableCell>
                 <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                  18.000 VNĐ
                 </TableCell>
                 <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                  15.000 VNĐ
                 </TableCell>
                 <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                  3.000 VNĐ
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="bg-accent p-3.5">Giá tuần (7 ngày)</TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                <TableCell className="bg-accent p-3.5">
+                  Thời hạn tin<sup className="ml-0.5">(*)</sup>
                 </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                <TableCell className="border-border border p-3.5 text-center text-base">
+                  10 ngày
                 </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                <TableCell className="border-border border p-3.5 text-center text-base">
+                  5 ngày
                 </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                <TableCell className="border-border border p-3.5 text-center text-base">
+                  8 giờ
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="bg-accent p-3.5">Giá tháng (30 ngày)</TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
+                <TableCell className="bg-accent p-3.5">
+                  Tự động duyệt<sup className="ml-0.5">(**)</sup>
                 </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="bg-accent p-3.5">Giá đẩy tin</TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-                <TableCell className="border-border border p-3.5 text-center text-lg font-bold">
-                  50.000 VNĐ
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="bg-accent p-3.5">Kích thước tin</TableCell>
-                <TableCell className="border-border border p-3.5 text-center">Nhỏ</TableCell>
-                <TableCell className="border-border border p-3.5 text-center">Trung bình</TableCell>
-                <TableCell className="border-border border p-3.5 text-center">Trung bình</TableCell>
-                <TableCell className="border-border border p-3.5 text-center">Lớn</TableCell>
-                <TableCell className="border-border border p-3.5 text-center">Rất lớn</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="bg-accent p-3.5">Hiển thị nút gọi điện</TableCell>
                 <TableCell className="border-border border p-3.5">
                   <div className="flex items-center justify-center">
-                    <div className="flex size-6 items-center justify-center rounded-full bg-[rgba(200,200,200,1)] text-white">
+                    <div className="bg-success flex size-6 items-center justify-center rounded-full text-white">
+                      <CheckIcon className="size-4" />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="border-border border p-3.5">
+                  <div className="flex items-center justify-center">
+                    <div className="bg-success flex size-6 items-center justify-center rounded-full text-white">
                       <CheckIcon className="size-4" />
                     </div>
                   </div>
@@ -136,65 +83,34 @@ export function ServicesPage() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="border-border border p-3.5">
-                  <div className="flex items-center justify-center">
-                    <div className="flex size-6 items-center justify-center rounded-full bg-[rgba(200,200,200,1)] text-white">
-                      <CheckIcon className="size-4" />
-                    </div>
-                  </div>
+              </TableRow>
+              <TableRow>
+                <TableCell className="bg-accent p-3.5">Tiêu đề tin</TableCell>
+                <TableCell className="border-border text-danger border p-3.5 text-center text-base font-bold uppercase">
+                  MÀU ĐỎ, IN HOA
                 </TableCell>
-                <TableCell className="border-border border p-3.5">
-                  <div className="flex items-center justify-center">
-                    <div className="flex size-6 items-center justify-center rounded-full bg-[#12B500] text-white">
-                      <CheckIcon className="size-4" />
-                    </div>
-                  </div>
+                <TableCell className="border-border text-primary border p-3.5 text-center text-base font-semibold uppercase">
+                  MÀU CAM, IN HOA
                 </TableCell>
-                <TableCell className="border-border border p-3.5">
-                  <div className="flex items-center justify-center">
-                    <div className="flex size-6 items-center justify-center rounded-full bg-[#12B500] text-white">
-                      <CheckIcon className="size-4" />
-                    </div>
-                  </div>
+                <TableCell className="border-border border p-3.5 text-center text-base font-medium text-[#2175be]">
+                  màu xanh, in thường
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
-          <p className="text-muted-foreground text-xs">
-            (*) Các tin VIP sẽ được hiển thị ngay sau khi khách hàng đăng tin mà không cần chờ kiểm
-            duyệt. Tin đăng sẽ được kiểm duyệt nội dung sau.
-          </p>
+          <div className="text-left">
+            <p className="text-muted-foreground text-xs">
+              (*) Đối với Tin thường, quý khách có thể tự chọn bất kỳ khung giờ nào trong ngày đăng
+              tin. Tin trong các gói còn lại sẽ có hiệu lực kể từ thời điểm đăng tin
+            </p>
+            <p className="text-muted-foreground text-xs">
+              (**) Các tin VIP & VIP Pro sẽ được hiển thị ngay sau khi khách hàng đăng tin mà không
+              cần chờ kiểm duyệt. Tuy nhiên, ban quản trị vẫn tiến hành kiểm duyệt và có thể gỡ tin
+              nếu tin vi phạm quy tắc cộng đồng
+            </p>
+          </div>
         </CardContent>
       </Card>
-      <div className="flex flex-col">
-        <h2 className="mb-16 text-center text-2xl font-semibold uppercase">Dịch vụ vận chuyển</h2>
-        <div className="grid grid-cols-2 gap-10">
-          <Card className="col-span-1">
-            <CardContent className="flex flex-col gap-4 p-8">
-              <Image src="/transportation.png" alt="transportation" width={141} height={141} />
-              <div className="mt-6 text-3xl font-bold uppercase">
-                200+ tài xế đang sẵn sàng để vận chuyển
-              </div>
-              <Button variant="link" className="w-max p-0! text-lg">
-                Khám phá ngay
-                <ChevronsRight className="size-5" />
-              </Button>
-            </CardContent>
-          </Card>
-          <Card className="col-span-1">
-            <CardContent className="flex flex-col gap-4 p-8">
-              <Image src="/transportation-fee.png" alt="transportation" width={141} height={141} />
-              <div className="mt-6 text-3xl font-bold uppercase">
-                chi phí vận chuyển và giá cước
-              </div>
-              <Button variant="link" className="w-max p-0! text-lg">
-                Khám phá ngay
-                <ChevronsRight className="size-5" />
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
     </div>
   );
 }

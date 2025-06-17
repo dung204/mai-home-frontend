@@ -8,7 +8,7 @@ import { Button } from '@/base/components/ui/button';
 
 export function TopUpPage() {
   return (
-    <section className="mx-auto my-10 flex w-lg flex-col gap-8">
+    <section className="mx-auto flex w-lg flex-col gap-8">
       <Alert className="border-y-0 border-r-0 border-l-4 border-[#11cbf0] bg-[#cff4fc]">
         <AlertTitle className="text-base font-semibold text-[#056685]">Ưu đãi nạp tiền:</AlertTitle>
         <AlertDescription className="text-[#1E7894]">

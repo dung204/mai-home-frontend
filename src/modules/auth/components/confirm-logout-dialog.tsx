@@ -14,9 +14,7 @@ import {
 import { buttonVariantsFn } from '@/base/components/ui/button';
 
 export function ConfirmLogoutDialog(props: ComponentProps<typeof AlertDialog>) {
-  const handleLogout = () => {
-    // Logic to handle logout
-  };
+  const handleLogout = () => {};
 
   return (
     <AlertDialog {...props}>

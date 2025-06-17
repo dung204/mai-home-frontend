@@ -1,9 +1,22 @@
 import { HttpClient } from '@/base/lib';
-import { LoginSchema, LoginSuccessResponse } from '@/modules/auth/types';
+import {
+  GetOtpSchema,
+  LoginSchema,
+  LoginSuccessResponse,
+  VerifyOtpSchema,
+} from '@/modules/auth/types';
 
 class AuthService extends HttpClient {
   constructor() {
     super();
+  }
+
+  public getOtp(payload: GetOtpSchema) {
+    return this.post<LoginSuccessResponse>('/auth/get-otp', payload);
+  }
+
+  public verifyOtp(payload: VerifyOtpSchema) {
+    return this.post<LoginSuccessResponse>('/auth/verify-otp', payload);
   }
 
   public register(payload: LoginSchema) {

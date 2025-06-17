@@ -1,9 +1,10 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { User } from 'lucide-react';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
+import { AlertCircleIcon, LockIcon, User } from 'lucide-react';
 
+import { Alert, AlertDescription, AlertTitle } from '@/base/components/ui/alert';
 import { Button } from '@/base/components/ui/button';
 import { Form } from '@/base/components/ui/form';
 import { cn } from '@/base/lib';
@@ -17,25 +18,46 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onLoginSuccess, onForgotPassword }: LoginFormProps) {
-  const { mutateAsync: triggerLogin, isPending } = useMutation({
+  const {
+    mutateAsync: triggerLogin,
+    isPending,
+    error,
+  } = useMutation({
     mutationFn: (payload: LoginSchema) => authService.login(payload),
     onSuccess: async ({ data }) => {
-      await axios.post('/api/auth/set-cookie', { data });
+      await axios.post('/api/auth/set-cookie', {
+        data: {
+          ...data,
+          user: {
+            ...data.user,
+            displayName: data.user.displayName && encodeURIComponent(data.user.displayName),
+          },
+        },
+      });
       onLoginSuccess?.();
     },
   });
 
-  const i18nNamespace = 'modules.auth.components.LoginForm';
-
   return (
     <div className="space-y-2">
+      {error && (
+        <Alert variant="danger" className="bg-danger/10">
+          <AlertCircleIcon />
+          <AlertTitle>Không thể đăng nhập</AlertTitle>
+          <AlertDescription>
+            {error instanceof AxiosError && error.status === HttpStatusCode.Unauthorized
+              ? 'Email/số điện thoại hoặc mật khẩu không chính xác.'
+              : 'Đã xảy ra lỗi bất ngờ khi đăng nhập. Vui lòng thử lại sau.'}
+          </AlertDescription>
+        </Alert>
+      )}
       <Form
         className="flex flex-col gap-4"
-        i18nNamespace={i18nNamespace}
+        loading={isPending}
         schema={loginSchema}
         fields={[
           {
-            name: 'email',
+            name: 'identifier',
             type: 'text',
             placeholder: 'Số điện thoại hoặc email',
             disabled: isPending,
@@ -63,7 +85,23 @@ export function LoginForm({ onLoginSuccess, onForgotPassword }: LoginFormProps) 
             disabled: isPending,
             render: ({ Control, Message }) => (
               <>
-                <Control classNames={{ container: 'py-2', input: 'text-base!' }} />
+                <div
+                  className={cn(
+                    'border-input flex items-center rounded-md border px-4 pr-2 transition-all',
+                    'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
+                    'has-[input[aria-invalid="true"]]:ring-danger/20 dark:has-[input[aria-invalid="true"]]:ring-danger/40 has-[input[aria-invalid="true"]]:border-danger',
+                    'py-2',
+                  )}
+                >
+                  <LockIcon />
+                  <Control
+                    classNames={{
+                      container:
+                        'rounded-none border-0! shadow-none ring-0! focus-visible:ring-0! w-full',
+                      input: 'text-base!',
+                    }}
+                  />
+                </div>
                 <Message />
               </>
             ),
@@ -74,7 +112,12 @@ export function LoginForm({ onLoginSuccess, onForgotPassword }: LoginFormProps) 
             Đăng nhập
           </Button>
         )}
-        onSuccessSubmit={(data) => triggerLogin(data)}
+        onSuccessSubmit={({ identifier, password }) =>
+          triggerLogin({
+            password,
+            ...(identifier.includes('@') ? { email: identifier } : { phone: identifier }),
+          })
+        }
       />
       <div className="flex justify-end">
         <Button

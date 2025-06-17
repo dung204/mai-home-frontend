@@ -1,38 +1,40 @@
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { PropertiesPage } from '@/modules/properties';
+import { getQueryClient } from '@/base/lib';
+import {
+  PropertiesPage,
+  PropertiesPageSkeleton,
+  PropertySearchParams,
+  propertiesService,
+  propertySearchParamsSchema,
+} from '@/modules/properties';
 
 export const metadata: Metadata = {
   title: 'Danh sách phòng trọ',
 };
 
 type PageProps = {
-  searchParams: Promise<{
-    type?: 'room' | 'house' | 'apartment' | 'shared';
-    view?: 'recommended' | 'latest';
-  }>;
+  searchParams: Promise<PropertySearchParams>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  let needRedirect = false;
-  const awaitedSearchParams = await searchParams;
-  const { type, view } = awaitedSearchParams;
-  const newSearchParams = new URLSearchParams(awaitedSearchParams as Record<string, string>);
+  const awaitedSearchParams = propertySearchParamsSchema.parse(
+    await searchParams,
+  ) as PropertySearchParams;
+  const queryClient = getQueryClient();
 
-  if (!type || !['room', 'house', 'apartment', 'shared'].includes(type)) {
-    newSearchParams.set('type', 'room');
-    needRedirect = true;
-  }
+  await queryClient.prefetchQuery({
+    queryKey: ['properties', 'all', awaitedSearchParams],
+    queryFn: () => propertiesService.getAllProperties(awaitedSearchParams),
+  });
 
-  if (!view || !['recommended', 'latest'].includes(view)) {
-    newSearchParams.set('view', 'recommended');
-    needRedirect = true;
-  }
-
-  if (needRedirect) {
-    redirect(`/properties?${newSearchParams.toString()}`);
-  }
-
-  return <PropertiesPage />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Suspense fallback={<PropertiesPageSkeleton />}>
+        <PropertiesPage searchParams={awaitedSearchParams} />
+      </Suspense>
+    </HydrationBoundary>
+  );
 }

@@ -1,20 +1,27 @@
 import { z } from 'zod';
 
-import { BaseEntity } from '@/base/types';
+import { baseEntitySchema } from '@/base/types';
 
-export interface User extends BaseEntity {
-  firstName: string;
-  lastName: string;
-  address: string | null;
-}
-
-export const createUserSchema = z.object({
-  firstName: z.string().nonempty('First name is required'),
-  lastName: z.string().nonempty('Last name is required'),
+export const userSchema = baseEntitySchema.extend({
+  email: z.string(),
+  phone: z.string().nullable(),
+  avatar: z.string().nullable(),
+  displayName: z
+    .string()
+    .transform((val) => decodeURIComponent(val))
+    .nullable(),
 });
 
-export type CreateUserSchema = z.infer<typeof createUserSchema>;
+export type User = z.infer<typeof userSchema>;
 
-export const updateUserSchema = createUserSchema.partial();
+export const updateUserSchema = z.object({
+  displayName: z.string().optional(),
+  email: z.string().email('Email không hợp lệ').optional(),
+  phone: z
+    .string()
+    .regex(/(0[3579]){1}[0-9]{8}\b/g, 'Số điện thoại không hợp lệ')
+    .optional(),
+  avatar: z.string().optional(),
+});
 
 export type UpdateUserSchema = z.infer<typeof updateUserSchema>;

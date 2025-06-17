@@ -1,11 +1,12 @@
-import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
 
+import { getQueryClient } from '@/base/lib';
 import { PrivatePage } from '@/modules/auth';
 import { userService } from '@/modules/users';
 
 export default async function Private() {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
     queryKey: ['users', 'profile'],

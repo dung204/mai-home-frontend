@@ -1,4 +1,4 @@
-export interface Sorting {
+export interface Order {
   field: string;
   direction: 'asc' | 'desc';
 }

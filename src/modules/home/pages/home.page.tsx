@@ -1,46 +1,64 @@
-import { FilePlus2Icon } from 'lucide-react';
-import Image from 'next/image';
+import { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
-import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
+import { getQueryClient } from '@/base/lib';
 import { AuthDialog } from '@/modules/auth';
+import {
+  NewPropertyButton,
+  PropertyCategory,
+  TopApartments,
+  TopApartmentsSkeleton,
+  TopRentedRooms,
+  TopRentedRoomsSkeleton,
+  TopShared,
+  TopSharedSkeleton,
+  TopWholeHouses,
+  TopWholeHousesSkeleton,
+  propertiesService,
+} from '@/modules/properties';
 
 import { LatestPosts } from '../components/latest-posts';
-import { TopMiniApartmentBuildings } from '../components/top-mini-apartment-buildings';
-import { TopRentedRooms } from '../components/top-rented-rooms';
-import { TopWholeHouses } from '../components/top-whole-houses';
+import { WelcomeBanner } from '../components/welcome-banner';
 
-export function HomePage() {
+export const metadata: Metadata = {
+  title: 'Trang chủ',
+};
+
+export async function HomePage() {
+  const queryClient = getQueryClient();
+
+  await Promise.all(
+    Object.values(PropertyCategory).map((category) =>
+      queryClient.prefetchQuery({
+        queryKey: ['properties', 'top', { category }],
+        queryFn: () =>
+          propertiesService.getAllProperties({
+            category,
+            pageSize: 10,
+          }),
+      }),
+    ),
+  );
+
   return (
     <>
-      <div className="relative h-screen w-full">
-        <Image
-          src="/home-banner.png"
-          alt="home banner"
-          fill
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 pt-[142px] text-white">
-          <div className="font-josefinslab text-6xl! font-semibold uppercase text-shadow-sm">
-            Welcome to
-          </div>
-          <div className="font-lilitaone text-9xl! uppercase text-shadow-sm">Mai Home</div>
-          <div className="text-2xl! font-bold text-shadow-sm">
-            Website tìm trọ tốt nhất hiện nay
-          </div>
-          <Button size="lg" className="p-7! text-xl! font-semibold">
-            <FilePlus2Icon className="size-6" />
-            Đăng tin ngay
-          </Button>
-        </div>
-      </div>
+      <WelcomeBanner />
       <div className="m-auto flex w-6xl flex-col gap-16">
         <LatestPosts />
-        <TopRentedRooms />
-        <TopWholeHouses />
-        <TopMiniApartmentBuildings />
+        <Suspense fallback={<TopRentedRoomsSkeleton />}>
+          <TopRentedRooms />
+        </Suspense>
+        <Suspense fallback={<TopWholeHousesSkeleton />}>
+          <TopWholeHouses />
+        </Suspense>
+        <Suspense fallback={<TopApartmentsSkeleton />}>
+          <TopApartments />
+        </Suspense>
+        <Suspense fallback={<TopSharedSkeleton />}>
+          <TopShared />
+        </Suspense>
         <Card>
           <CardContent className="flex flex-col gap-10 px-20 text-center">
             <div className="flex flex-col gap-6">
@@ -48,19 +66,28 @@ export function HomePage() {
               <p>
                 Chúng tôi hiểu bạn có rất nhiều kênh để lựa chọn, nhưng Mai Home tự hào là nền tảng
                 hiệu quả, thân thiện và đáng tin cậy dành cho những ai đang cần cho{' '}
-                <Link href="#" className="text-primary font-bold underline">
+                <Link href="/properties?category=ROOM" className="text-primary font-bold underline">
                   thuê phòng trọ
                 </Link>
                 ,{' '}
-                <Link href="#" className="text-primary font-bold underline">
+                <Link
+                  href="/properties?category=HOUSE"
+                  className="text-primary font-bold underline"
+                >
                   nhà nguyên căn
                 </Link>
                 ,{' '}
-                <Link href="#" className="text-primary font-bold underline">
+                <Link
+                  href="/properties?category=APARTMENT"
+                  className="text-primary font-bold underline"
+                >
                   chung cư mini
                 </Link>
                 , hoặc{' '}
-                <Link href="#" className="text-primary font-bold underline">
+                <Link
+                  href="/properties?category=SHARED"
+                  className="text-primary font-bold underline"
+                >
                   tìm người ở ghép
                 </Link>
                 .
@@ -78,10 +105,7 @@ export function HomePage() {
                 <br />
                 Hãy để Mai Home giúp bạn tiếp cận đúng người - đúng nhu cầu - đúng thời điểm.
               </p>
-              <Button size="lg" className="w-max p-7! text-xl! font-semibold">
-                <FilePlus2Icon className="size-6" />
-                Đăng tin ngay
-              </Button>
+              <NewPropertyButton />
             </div>
           </CardContent>
         </Card>

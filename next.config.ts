@@ -3,6 +3,15 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'res.cloudinary.com',
+        pathname: '/dmpllzq2z/image/upload/**',
+        protocol: 'https',
+      },
+    ],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin({

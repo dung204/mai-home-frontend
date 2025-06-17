@@ -181,30 +181,7 @@
   },
   "modules": {
     "auth": {
-      "components": {
-        "LoginForm": {
-          "fields": {
-            "email": {
-              "label": "Email",
-              "placeholder": "Nhập email của bạn",
-              "errors": {
-                "required": "Email không được để trống",
-                "invalid": "Email không hợp lệ"
-              }
-            },
-            "password": {
-              "label": "Mật khẩu",
-              "placeholder": "Nhập mật khẩu của bạn",
-              "errors": {
-                "too_small": "Mật khẩu phải dài hơn hoặc bằng 8 ký tự"
-              }
-            }
-          }
-        },
-        "errors": {
-          "401": "Email hoặc mật khẩu không chính xác"
-        }
-      },
+      "components": {},
       "pages": {}
     }
   }

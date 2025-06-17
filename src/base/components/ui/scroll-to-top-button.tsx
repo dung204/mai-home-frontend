@@ -7,19 +7,15 @@ import { Button } from './button';
 
 export function ScrollToTopButton() {
   const handleScrollToTop = () => {
-    document
-      .querySelector<HTMLDivElement>('body > div.relative.app-scroll-area.h-screen > div')
-      ?.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+    document.querySelector<HTMLDivElement>('.app-scroll-area > div')?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   useEffect(() => {
     const abortController = new AbortController();
-    const scrollArea = document.querySelector<HTMLDivElement>(
-      'body > div.relative.app-scroll-area.h-screen > div',
-    );
+    const scrollArea = document.querySelector<HTMLDivElement>('.app-scroll-area > div');
     const scrollToTopButton = document.querySelector<HTMLDivElement>('.scroll-to-top-btn');
 
     if (scrollArea) {
