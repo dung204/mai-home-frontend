@@ -23,7 +23,7 @@ services:
     depends_on:
       - server
     networks:
-      - app-network
+      - mai-home-network
     restart: unless-stopped
 
 networks:
