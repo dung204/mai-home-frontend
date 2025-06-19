@@ -35,6 +35,27 @@ export function UserPropertiesLayout({ children }: PropsWithChildren) {
     );
   }
 
+  if (pathname.startsWith('/user/properties') && pathname.endsWith('/edit')) {
+    return (
+      <>
+        <section className="z-50 flex flex-col gap-4 bg-white px-10 py-6 shadow-md">
+          <h1 className="text-2xl font-medium">Chỉnh sửa bài đăng</h1>
+        </section>
+        <ScrollArea type="always" className="app-scroll-area grow">
+          <section className="absolute inset-0">
+            <div className="mx-auto my-10 flex w-3xl flex-col gap-8">{children}</div>
+            <div className="w-full px-10">
+              <div className="border-muted-foreground size-full border-t">
+                <Footer />
+              </div>
+            </div>
+          </section>
+          <ScrollToTopButton />
+        </ScrollArea>
+      </>
+    );
+  }
+
   return (
     <>
       <section className="z-50 flex flex-col gap-4 bg-white px-10 pt-6 shadow-md">

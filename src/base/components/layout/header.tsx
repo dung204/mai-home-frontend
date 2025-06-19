@@ -7,7 +7,9 @@ export async function Header() {
   return (
     <header className="z-50 flex w-full flex-col bg-white shadow-md">
       <div className="border-muted-foreground/45 flex items-center justify-between border-b px-8">
-        <HeaderNav />
+        <Suspense>
+          <HeaderNav />
+        </Suspense>
         <div className="flex items-center gap-2">
           <Suspense fallback={<UserActionsSkeleton />}>
             <UserActions />
