@@ -3,11 +3,9 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 
 import { Card, CardContent } from '@/base/components/ui/card';
-import { getQueryClient } from '@/base/lib';
 import { AuthDialog } from '@/modules/auth';
 import {
   NewPropertyButton,
-  PropertyCategory,
   TopApartments,
   TopApartmentsSkeleton,
   TopRentedRooms,
@@ -16,7 +14,6 @@ import {
   TopSharedSkeleton,
   TopWholeHouses,
   TopWholeHousesSkeleton,
-  propertiesService,
 } from '@/modules/properties';
 
 import { LatestPosts } from '../components/latest-posts';
@@ -27,21 +24,6 @@ export const metadata: Metadata = {
 };
 
 export async function HomePage() {
-  const queryClient = getQueryClient();
-
-  await Promise.all(
-    Object.values(PropertyCategory).map((category) =>
-      queryClient.prefetchQuery({
-        queryKey: ['properties', 'top', { category }],
-        queryFn: () =>
-          propertiesService.getAllProperties({
-            category,
-            pageSize: 10,
-          }),
-      }),
-    ),
-  );
-
   return (
     <>
       <WelcomeBanner />
