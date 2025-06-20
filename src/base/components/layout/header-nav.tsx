@@ -77,3 +77,28 @@ export function HeaderNav() {
     </nav>
   );
 }
+
+export function DehydratedHeaderNav() {
+  return (
+    <nav className="flex items-center gap-4">
+      <Link href="/">
+        <Image src="/mai-home-logo.png" alt="Mai Home Logo" width={90} height={90} />
+      </Link>
+      <Link href="/properties?category=ROOM">
+        <Button variant="link">Phòng trọ</Button>
+      </Link>
+      <Link href="/properties?category=HOUSE">
+        <Button variant="link">Nhà nguyên căn</Button>
+      </Link>
+      <Link href="/properties?category=APARTMENT">
+        <Button variant="link">Chung cư mini</Button>
+      </Link>
+      <Link href="/properties?category=SHARED">
+        <Button variant="link">Ở ghép</Button>
+      </Link>
+      <Link href="/services">
+        <Button variant="link">Bảng giá đăng tin</Button>
+      </Link>
+    </nav>
+  );
+}
