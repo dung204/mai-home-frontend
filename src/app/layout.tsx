@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale } from 'next-intl/server';
 
 import { Toaster } from '@/base/components/ui/toaster';
 import { ConfirmLogoutDialogProvider, QueryProvider } from '@/base/providers';
@@ -18,10 +17,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-
   return (
-    <html lang={locale}>
+    <html lang="vi">
       <head>
         <link
           rel="stylesheet"

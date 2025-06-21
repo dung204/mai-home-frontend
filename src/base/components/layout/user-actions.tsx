@@ -1,6 +1,5 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import {
   ChevronDown,
@@ -13,10 +12,11 @@ import {
   UserPlusIcon,
 } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
 
 import { useAuthDialog } from '@/base/providers';
-import { useUser } from '@/modules/users';
+import { User, UserAvatar } from '@/modules/users';
 
 import {
   AlertDialog,
@@ -27,27 +27,35 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Button, buttonVariantsFn } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Skeleton } from '../ui/skeleton';
 
-export function UserActions() {
-  const { data, error, isLoading } = useUser();
+interface UserActionsProps {
+  user: Omit<User, 'createTimestamp' | 'updateTimestamp' | 'deleteTimestamp'> | undefined;
+}
+
+export function UserActions({ user }: UserActionsProps) {
+  const pathname = usePathname();
   const { setOpen, setMode, setVersion } = useAuthDialog();
-  const queryClient = useQueryClient();
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
-  if (isLoading) {
-    return <UserActionsSkeleton />;
-  }
+  const handleLogout = async () => {
+    await axios.delete('/api/auth/delete-cookie');
+    if (pathname.startsWith('/user')) {
+      window.location.href = '/';
+    } else {
+      window.location.reload();
+    }
+  };
 
-  if (error || !data || !data.data) {
+  if (!user) {
     return (
       <>
         <Button
           variant="ghost"
-          className="rounded-full px-4! py-6! text-base"
+          className="rounded-full px-4! py-6! text-base max-sm:hidden"
           onClick={() => {
             setVersion((prev) => prev + 1);
             setMode('register');
@@ -70,7 +78,7 @@ export function UserActions() {
           Đăng nhập
         </Button>
         <Button
-          className="rounded-full px-4! py-6! text-base"
+          className="rounded-full px-4! py-6! text-base max-sm:hidden"
           onClick={() => {
             setVersion((prev) => prev + 1);
             setMode('login');
@@ -84,32 +92,22 @@ export function UserActions() {
     );
   }
 
-  const user = data.data;
-
-  const handleLogout = async () => {
-    await axios.delete('/api/auth/delete-cookie');
-    await queryClient.invalidateQueries({ queryKey: ['users', 'profile'] });
-  };
-
   return (
     <>
       <Button variant="ghost" className="hover:bg-accent rounded-full px-4! py-6! text-base">
         <HeartIcon />
-        Tin đã lưu
+        <span className="max-xl:hidden">Tin đã lưu</span>
       </Button>
       <Link href="/user/properties">
         <Button variant="ghost" className="hover:bg-accent rounded-full px-4! py-6! text-base">
           <FolderOpenIcon />
-          Quản lý
+          <span className="max-xl:hidden">Quản lý</span>
         </Button>
       </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="hover:bg-accent rounded-full px-4! py-6! text-base">
-            <Avatar>
-              <AvatarImage src="/default-user-avatar.png" />
-            </Avatar>
-            {user.displayName}
+            <UserAvatar user={user} />
             <ChevronDown />
           </Button>
         </DropdownMenuTrigger>
@@ -119,9 +117,7 @@ export function UserActions() {
           onCloseAutoFocus={(e) => e.preventDefault()}
         >
           <div className="flex items-center gap-3">
-            <Avatar className="size-10">
-              <AvatarImage src="/default-user-avatar.png" />
-            </Avatar>
+            <UserAvatar user={user} className="size-10" />
             <div className="flex flex-col gap-1">
               <span className="text-sm font-semibold">{user.displayName}</span>
               <span className="text-muted-foreground text-xs">{user.phone}</span>
@@ -194,7 +190,7 @@ export function UserActions() {
         </DropdownMenuContent>
       </DropdownMenu>
       <Link href="/user/properties/new">
-        <Button className="rounded-full px-4! py-6! text-base">
+        <Button className="rounded-full px-4! py-6! text-base max-sm:hidden">
           <FilePlus2Icon />
           Đăng tin
         </Button>
@@ -220,6 +216,10 @@ export function UserActionsSkeleton() {
         <span className="h-[1lh] w-[10ch]">
           <Skeleton className="size-full" />
         </span>
+      </Button>
+      <Button className="rounded-full px-4! py-6! text-base max-sm:hidden">
+        <FilePlus2Icon />
+        Đăng tin
       </Button>
     </>
   );

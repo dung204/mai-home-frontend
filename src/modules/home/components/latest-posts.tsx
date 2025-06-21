@@ -19,33 +19,42 @@ export function LatestPosts() {
         <CardHeader className="flex">
           <Button
             variant="link"
-            className={cn('text-muted-foreground text-xl font-bold underline-offset-[20px]', {
-              'text-primary underline': postCategory === 'news',
-            })}
+            className={cn(
+              'text-muted-foreground text-base font-bold underline-offset-[20px] sm:text-xl',
+              {
+                'text-primary underline': postCategory === 'news',
+              },
+            )}
             onClick={() => setPostCategory('news')}
           >
             Tin tức
           </Button>
           <Button
             variant="link"
-            className={cn('text-muted-foreground text-xl font-bold underline-offset-[20px]', {
-              'text-primary underline': postCategory === 'handbook',
-            })}
+            className={cn(
+              'text-muted-foreground text-base font-bold underline-offset-[20px] sm:text-xl',
+              {
+                'text-primary underline': postCategory === 'handbook',
+              },
+            )}
             onClick={() => setPostCategory('handbook')}
           >
             Cẩm nang
           </Button>
           <Button
             variant="link"
-            className={cn('text-muted-foreground text-xl font-bold underline-offset-[20px]', {
-              'text-primary underline': postCategory === 'guide',
-            })}
+            className={cn(
+              'text-muted-foreground text-base font-bold underline-offset-[20px] sm:text-xl',
+              {
+                'text-primary underline': postCategory === 'guide',
+              },
+            )}
             onClick={() => setPostCategory('guide')}
           >
             Hướng dẫn
           </Button>
         </CardHeader>
-        <div className="mt-6 grid h-[572px] w-full grid-cols-2 grid-rows-3 gap-6 px-6">
+        <div className="mt-6 grid h-[572px] w-full grid-cols-1 grid-rows-3 gap-6 px-6 md:grid-cols-2">
           <div className="col-span-1 row-span-3 flex flex-col gap-8">
             <div className="relative h-2/3 w-full">
               <Link href="/news/1">

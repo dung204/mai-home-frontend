@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/base/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/base/components/ui/avatar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,6 +17,7 @@ import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import { Separator } from '@/base/components/ui/separator';
 import { Skeleton } from '@/base/components/ui/skeleton';
+import { UserAvatar } from '@/modules/users';
 
 import { HighlightedNews } from '../components/highlighted-news';
 import { HighlightedProperties } from '../components/highlighted-properties';
@@ -118,18 +119,18 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
                 <Separator />
                 <h2 className="text-base font-bold">Thông tin liên hệ</h2>
                 <div className="flex items-center gap-10">
-                  <Avatar className="size-24">
-                    <AvatarImage src="/default-user-avatar.png" />
-                  </Avatar>
+                  <UserAvatar user={property.owner} className="size-24" />
                   <div className="flex flex-col gap-3">
-                    <div className="text-xl font-medium">{property.owner.displayName}</div>
-                    <div className="flex items-center gap-1 text-xs">
-                      Tham gia từ ngày{' '}
-                      {new Intl.DateTimeFormat('vi-VN', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                      }).format(new Date(property.owner.createTimestamp ?? ''))}
+                    <div className="flex flex-col gap-1.5">
+                      <div className="text-xl font-medium">{property.owner.displayName}</div>
+                      <div className="flex items-center gap-1 text-xs">
+                        Tham gia từ ngày{' '}
+                        {new Intl.DateTimeFormat('vi-VN', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        }).format(new Date(property.owner.createTimestamp ?? ''))}
+                      </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <Link href={`tel:${property.owner.phone}`} target="_blank">
@@ -139,7 +140,7 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
                         </Button>
                       </Link>
                       <Link href={`https://zalo.me/${property.owner.phone}`} target="_blank">
-                        <Button className="bg-[#0d6efd]">
+                        <Button className="bg-[#0d6efd] hover:bg-[#0d6efd]/90">
                           <PhoneIcon />
                           Liên hệ Zalo
                         </Button>
@@ -158,19 +159,19 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
           <section>
             <Card>
               <CardContent className="flex flex-col items-center gap-6">
-                <Avatar className="size-24">
-                  <AvatarImage src="/default-user-avatar.png" />
-                </Avatar>
-                <div className="text-base font-medium">{property.owner.displayName}</div>
-                <div className="flex items-center gap-1 text-xs">
-                  <span>
-                    Tham gia từ ngày{' '}
-                    {new Intl.DateTimeFormat('vi-VN', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    }).format(new Date(property.owner.createTimestamp ?? ''))}
-                  </span>
+                <UserAvatar user={property.owner} className="size-24" />
+                <div className="flex flex-col items-center gap-3">
+                  <div className="text-base font-medium">{property.owner.displayName}</div>
+                  <div className="flex items-center gap-1 text-xs">
+                    <span>
+                      Tham gia từ ngày{' '}
+                      {new Intl.DateTimeFormat('vi-VN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      }).format(new Date(property.owner.createTimestamp ?? ''))}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex w-full flex-col items-center gap-3">
                   <Link href={`tel:${property.owner.phone}`} target="_blank">

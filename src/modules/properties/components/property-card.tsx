@@ -39,9 +39,9 @@ export function HorizontalPropertyCard({ property }: PropertyCardProps) {
   return (
     <Card>
       <CardContent>
-        <div className="flex gap-6">
+        <div className="flex items-center gap-6">
           <Link href={`/property/${property.id}`}>
-            <div className="relative aspect-square h-64">
+            <div className="relative aspect-square w-32 sm:w-64">
               {property.videos.length > 0 ? (
                 <>
                   <div className="absolute inset-0 flex size-full items-center justify-center rounded-md bg-black/50">

@@ -46,7 +46,7 @@ export function ScrollToTopButton() {
   return (
     <Button
       size="icon"
-      className="scroll-to-top-btn pointer-events-none fixed right-10 bottom-10 z-50 cursor-default rounded-full p-6 opacity-0 transition-opacity"
+      className="scroll-to-top-btn pointer-events-none fixed right-5 bottom-5 z-50 cursor-default rounded-full p-6 opacity-0 transition-opacity sm:right-10 sm:bottom-10"
       onClick={handleScrollToTop}
     >
       <ArrowUpIcon className="size-6" />

@@ -1,4 +1,6 @@
 {
   "eslint.useFlatConfig": true,
-  "tailwindCSS.classFunctions": ["cva", "cn", "cx", "clsx", "classNames", "classnames", "twMerge"]
+  "tailwindCSS.classFunctions": ["cva", "cn", "cx", "clsx", "classNames", "classnames", "twMerge"],
+  "typescript.tsserver.useSyntaxServer": "auto",
+  "typescript.disableAutomaticTypeAcquisition": true
 }

@@ -28,7 +28,7 @@ export function PropertyCarousel({ properties }: PropertyCarouselProps) {
     >
       <CarouselContent>
         {properties.map((property) => (
-          <CarouselItem key={property.id} className="basis-1/4">
+          <CarouselItem key={property.id} className="md:basis-1/2 lg:basis-1/3">
             <div className="p-1">
               <VerticalPropertyCard property={property} withOwner />
             </div>
@@ -51,7 +51,7 @@ export function PropertyCarouselSkeleton() {
     >
       <CarouselContent>
         {Array.from({ length: 10 }).map(() => (
-          <CarouselItem key={crypto.randomUUID()} className="basis-1/4">
+          <CarouselItem key={crypto.randomUUID()} className="md:basis-1/2 lg:basis-1/3">
             <div className="p-1">
               <VerticalPropertyCardSkeleton />
             </div>

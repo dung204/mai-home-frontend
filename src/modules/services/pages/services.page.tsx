@@ -12,7 +12,7 @@ import {
 
 export function ServicesPage() {
   return (
-    <div className="m-auto mt-12 flex w-6xl flex-col gap-16">
+    <div className="container m-auto mt-12 flex flex-col gap-16 xl:max-w-6xl!">
       <Card>
         <CardContent className="flex flex-col items-center justify-center gap-10">
           <h2 className="text-2xl font-semibold uppercase">Bảng giá đăng tin</h2>

@@ -6,8 +6,8 @@ import { Separator } from '../ui/separator';
 export function Footer() {
   return (
     <footer className="flex flex-col">
-      <div className="grid grid-cols-4 pt-10 pb-20">
-        <div className="col-span-1 flex flex-col gap-4">
+      <div className="grid gap-y-12 pt-10 pb-20 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="col-span-1 flex flex-col gap-4 max-lg:items-center">
           <h3 className="text-lg font-semibold uppercase">Về Maihome</h3>
           <Link href="#" className="capitalize">
             Giới thiệu
@@ -19,7 +19,7 @@ export function Footer() {
             Liên hệ
           </Link>
         </div>
-        <div className="col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 flex flex-col gap-4 max-lg:items-center">
           <h3 className="text-lg font-semibold uppercase">Dành cho khách hàng</h3>
           <Link href="#" className="capitalize">
             Câu hỏi thường gặp
@@ -34,7 +34,7 @@ export function Footer() {
             Quyền khiếu nại
           </Link>
         </div>
-        <div className="col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 flex flex-col gap-4 max-lg:items-center">
           <h3 className="text-lg font-semibold uppercase">Phương thức thanh toán</h3>
           <div className="flex flex-wrap items-center gap-8">
             <Image src="/visa-logo.png" alt="Visa" width={50} height={50}></Image>
@@ -43,7 +43,7 @@ export function Footer() {
             <Image src="/shopee-pay-logo.png" alt="Shopee pay" width={50} height={50}></Image>
           </div>
         </div>
-        <div className="col-span-1 flex flex-col gap-4">
+        <div className="col-span-1 flex flex-col gap-4 max-lg:items-center">
           <h3 className="text-lg font-semibold uppercase">Theo dõi Maihome</h3>
           <div className="flex flex-wrap items-center gap-8">
             <Link href="https://www.facebook.com/Maihomeforyou" target="_blank">
@@ -54,7 +54,7 @@ export function Footer() {
         </div>
       </div>
       <Separator className="bg-muted-foreground" />
-      <div className="flex flex-col gap-2.5 py-12">
+      <div className="flex flex-col gap-2.5 py-12 max-sm:items-center max-sm:text-center">
         <h3 className="text-lg font-semibold uppercase">Thuộc dự án của Hoa Mai Group</h3>
         <p>Khu Công Nghệ Cao Hòa Lạc, km 29, Đại lộ, Thăng Long, Hà Nội</p>
         <p>

@@ -4,6 +4,10 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  experimental: {
+    ppr: 'incremental',
+    webpackMemoryOptimizations: true,
+  },
   images: {
     remotePatterns: [
       {

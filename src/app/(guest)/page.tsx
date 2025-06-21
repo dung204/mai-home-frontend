@@ -1,11 +1,16 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
-import { HomePage } from '@/modules/home';
+import { HomePage, HomePageSkeleton } from '@/modules/home';
 
 export const metadata: Metadata = {
   title: 'Trang chủ',
 };
 
 export default function Page() {
-  return <HomePage />;
+  return (
+    <Suspense fallback={<HomePageSkeleton />}>
+      <HomePage />
+    </Suspense>
+  );
 }

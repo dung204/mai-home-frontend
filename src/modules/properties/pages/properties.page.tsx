@@ -1,7 +1,7 @@
 'use client';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, FilterIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
@@ -59,11 +59,13 @@ export function PropertiesPage({ searchParams }: PropertiesPageProps) {
   };
 
   return (
-    <div className="m-auto mt-12 flex w-6xl flex-col gap-16">
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <span>{getTitle(searchParams)}</span>
+    <div className="container mx-auto mt-12 flex flex-col gap-x-16 xl:max-w-6xl!">
+      <div className="grid-col-2 grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <div className="max-xs:flex-col flex items-center justify-between gap-2">
+            <span className="max-xs:text-center" title={getTitle(searchParams)}>
+              {getTitle(searchParams)}
+            </span>
             <PropertiesFilter key={JSON.stringify(searchParams)} />
           </div>
           {properties.length !== 0 ? (
@@ -202,10 +204,16 @@ export function PropertiesPage({ searchParams }: PropertiesPageProps) {
 
 export function PropertiesPageSkeleton() {
   return (
-    <div className="m-auto mt-12 flex w-6xl flex-col gap-16">
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 flex flex-col gap-6">
-          <div className="flex items-center gap-10">Đang hiện tất cả các bài đăng</div>
+    <div className="container mx-auto mt-12 flex flex-col gap-x-16 xl:max-w-6xl!">
+      <div className="grid-col-2 grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <div className="max-xs:flex-col flex items-center justify-between gap-2">
+            <span className="max-xs:text-center">Đang hiện tất cả các bài đăng</span>
+            <Button variant="outline">
+              <FilterIcon />
+              Bộ lọc
+            </Button>
+          </div>
           {Array.from({ length: 10 }).map((_, index) => (
             <HorizontalPropertyCardSkeleton key={`property-card-${index}`} />
           ))}

@@ -59,7 +59,7 @@ export function TransactionsLayout({ children }: PropsWithChildren) {
           </Link>
         </div>
       </section>
-      <ScrollArea type="always" className="app-scroll-area grow">
+      <ScrollArea className="app-scroll-area grow">
         <section className="absolute inset-0">
           <div className="mx-auto my-10 flex w-3xl flex-col gap-8">{children}</div>
           <div className="w-full px-10">

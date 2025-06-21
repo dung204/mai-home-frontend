@@ -78,6 +78,29 @@ async function handleFetch(path: string[], req: Request) {
     ...(req.method !== 'GET' && { body: req.body, duplex: 'half' }),
   });
 
+  // If this fetch is updating user profile, update the cookie as well
+  if (req.method === 'PATCH' && fetchUrl.endsWith('/users/profile') && res.ok) {
+    const updateUser = (await res.clone().json()).data;
+
+    if (!setNewTokens) {
+      return new Response(res.body, {
+        // @ts-expect-error Array of cookies does work in runtime
+        headers: {
+          ...Object.fromEntries(Array.from(res.headers.entries())),
+          'Set-Cookie': [
+            `user=${JSON.stringify({
+              id: updateUser.id,
+              email: updateUser.email,
+              phone: updateUser.phone,
+              displayName: encodeURIComponent(updateUser.displayName),
+              avatar: updateUser.avatar,
+            })}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+          ],
+        },
+      });
+    }
+  }
+
   if (setNewTokens) {
     return new Response(res.body, {
       // @ts-expect-error Array of cookies does work in runtime
