@@ -1,8 +1,9 @@
 'use client';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { DotIcon, PhoneIcon } from 'lucide-react';
+import { PhoneIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -20,8 +21,10 @@ import { Skeleton } from '@/base/components/ui/skeleton';
 import { UserAvatar } from '@/modules/users';
 
 import { HighlightedNews } from '../components/highlighted-news';
-import { HighlightedProperties } from '../components/highlighted-properties';
-import { HorizontalPropertyCardSkeleton } from '../components/property-card';
+import {
+  HighlightedProperties,
+  HighlightedPropertiesSkeleton,
+} from '../components/highlighted-properties';
 import { PropertyImageCarousel } from '../components/property-image-carousel';
 import {
   RecommendedProperties,
@@ -47,150 +50,214 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
   });
 
   return (
-    <div className="m-auto mt-12 flex w-6xl flex-col gap-16">
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 flex flex-col gap-6">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                {propertyCategories[property.category ?? PropertyCategory.ROOM]}
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>{property.city.name}</BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>{property.district.name}</BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem className="grow">{property.title}</BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <section>
-            <Card className="overflow-hidden pt-0">
-              <PropertyImageCarousel
-                property={property}
-                classNames={{
-                  item: 'h-[300px]',
-                }}
-                opts={{
-                  loop: true,
-                }}
-              />
-            </Card>
-          </section>
-          <section>
-            <Card>
-              <CardContent className="flex flex-col gap-10">
-                <h1 className="flex flex-col gap-1.5 text-xl font-medium">{property.title}</h1>
-                <div className="text-xl font-medium">
-                  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                    parseInt(property.pricePerMonth ?? '0'),
-                  )}
-                  /tháng
+    <div className="container m-auto mt-12 flex flex-col gap-16 xl:max-w-6xl!">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          {!property ? (
+            <>
+              <div className="space-y-20">
+                <div className="flex flex-col items-center gap-4">
+                  <Image src="/result-not-found.png" alt="not found" width={300} height={300} />
+                  <p className="w-2/3 text-center">
+                    Bài đăng không tồn tại hoặc đã bị xóa, hết hạn.
+                  </p>
                 </div>
-                <div className="grid grid-cols-5 gap-6">
-                  <div className="col-span-1">Diện tích:</div>
-                  <div className="col-span-4">
-                    {parseInt(property.area ?? '0')}m<sup>2</sup>
-                  </div>
-                  <div className="col-span-1">Tỉnh/Thành phố:</div>
-                  <div className="col-span-4">{property.city.name}</div>
-                  <div className="col-span-1">Quận/Huyện:</div>
-                  <div className="col-span-4">{property.district.name}</div>
-                  <div className="col-span-1">Phường/Xã:</div>
-                  <div className="col-span-4">{property.ward.name}</div>
-                  <div className="col-span-1">Địa chỉ:</div>
-                  <div className="col-span-4">{property.address}</div>
-                  <div className="col-span-1">Ngày đăng:</div>
-                  <div className="col-span-4">
-                    {new Intl.DateTimeFormat('vi-VN', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    }).format(new Date(property.createTimestamp ?? ''))}
-                  </div>
-                </div>
-                <Separator />
-                <h2 className="text-base font-bold">Thông tin mô tả</h2>
-                {property.description}
-                <Separator />
-                <h2 className="text-base font-bold">Vị trí bản đồ</h2>
-                <FixedMap
-                  position={[parseFloat(property.latitude), parseFloat(property.longitude)]}
-                />
-                <Separator />
-                <h2 className="text-base font-bold">Thông tin liên hệ</h2>
-                <div className="flex items-center gap-10">
+                <Suspense fallback={<RecommendedPropertiesSkeleton />}>
+                  <RecommendedProperties />
+                </Suspense>
+              </div>
+            </>
+          ) : (
+            <>
+              <Breadcrumb>
+                <BreadcrumbList className="flex-nowrap">
+                  <BreadcrumbItem className="text-nowrap">
+                    {propertyCategories[property.category ?? PropertyCategory.ROOM]}
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem className="text-nowrap">{property.city.name}</BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem className="text-nowrap">{property.district.name}</BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <span className="line-clamp-1">{property.title}</span>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+              <section>
+                <Card className="overflow-hidden pt-0">
+                  <PropertyImageCarousel
+                    property={property}
+                    classNames={{
+                      item: 'h-[300px]',
+                    }}
+                    opts={{
+                      loop: true,
+                    }}
+                  />
+                </Card>
+              </section>
+              <section>
+                <Card>
+                  <CardContent className="flex flex-col gap-10">
+                    <h1 className="flex flex-col gap-1.5 text-xl font-medium">{property.title}</h1>
+                    <div className="text-xl font-medium">
+                      {new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      }).format(parseInt(property.pricePerMonth ?? '0'))}
+                      /tháng
+                    </div>
+                    <div className="xs:gap-x-6 xs:grid-cols-5 grid grid-cols-2 gap-y-6">
+                      <div className="xs:col-span-2 col-span-1 sm:col-span-1">Diện tích:</div>
+                      <div className="xs:col-span-3 col-span-1 sm:col-span-4">
+                        {parseInt(property.area ?? '0')}m<sup>2</sup>
+                      </div>
+                      <div className="xs:col-span-2 col-span-1 sm:col-span-1">Tỉnh/Thành phố:</div>
+                      <div className="xs:col-span-3 col-span-1 sm:col-span-4">
+                        {property.city.name}
+                      </div>
+                      <div className="xs:col-span-2 col-span-1 sm:col-span-1">Quận/Huyện:</div>
+                      <div className="xs:col-span-3 col-span-1 sm:col-span-4">
+                        {property.district.name}
+                      </div>
+                      <div className="xs:col-span-2 col-span-1 sm:col-span-1">Phường/Xã:</div>
+                      <div className="xs:col-span-3 col-span-1 sm:col-span-4">
+                        {property.ward.name}
+                      </div>
+                      <div className="xs:col-span-2 col-span-1 sm:col-span-1">Địa chỉ:</div>
+                      <div className="xs:col-span-3 col-span-1 sm:col-span-4">
+                        {property.address}
+                      </div>
+                      <div className="xs:col-span-2 col-span-1 sm:col-span-1">Ngày đăng:</div>
+                      <div className="xs:col-span-3 col-span-1 sm:col-span-4">
+                        {new Intl.DateTimeFormat('vi-VN', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        }).format(new Date(property.createTimestamp ?? ''))}
+                      </div>
+                    </div>
+                    <Separator />
+                    <h2 className="text-base font-bold">Thông tin mô tả</h2>
+                    {property.description}
+                    <Separator />
+                    <h2 className="text-base font-bold">Vị trí bản đồ</h2>
+                    <FixedMap
+                      position={[parseFloat(property.latitude), parseFloat(property.longitude)]}
+                    />
+                    <Separator />
+                    <h2 className="text-base font-bold">Thông tin liên hệ</h2>
+                    <div className="max-xs:flex-col flex items-center gap-x-10 gap-y-3">
+                      <UserAvatar user={property.owner} className="size-24" />
+                      <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-1.5">
+                          <div className="max-xs:text-center text-xl font-medium">
+                            {property.owner.displayName}
+                          </div>
+                          <div className="max-xs:justify-center flex items-center gap-1 text-xs">
+                            Tham gia từ ngày{' '}
+                            {new Intl.DateTimeFormat('vi-VN', {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                            }).format(new Date(property.owner.createTimestamp ?? ''))}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Link href={`tel:${property.owner.phone}`} target="_blank">
+                            <Button variant="success">
+                              <PhoneIcon />
+                              {property.owner.phone}
+                            </Button>
+                          </Link>
+                          <Link href={`https://zalo.me/${property.owner.phone}`} target="_blank">
+                            <Button className="bg-[#0d6efd] hover:bg-[#0d6efd]/90">
+                              <PhoneIcon />
+                              Liên hệ Zalo
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
+            </>
+          )}
+          <Suspense fallback={<RecommendedPropertiesSkeleton />}>
+            <RecommendedProperties />
+          </Suspense>
+        </div>
+        <div className="col-span-1 flex flex-col gap-6">
+          {property && (
+            <section className="max-lg:hidden">
+              <Card>
+                <CardContent className="flex flex-col items-center gap-6">
                   <UserAvatar user={property.owner} className="size-24" />
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1.5">
-                      <div className="text-xl font-medium">{property.owner.displayName}</div>
-                      <div className="flex items-center gap-1 text-xs">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="text-base font-medium">{property.owner.displayName}</div>
+                    <div className="flex items-center gap-1 text-xs">
+                      <span>
                         Tham gia từ ngày{' '}
                         {new Intl.DateTimeFormat('vi-VN', {
                           year: 'numeric',
                           month: '2-digit',
                           day: '2-digit',
                         }).format(new Date(property.owner.createTimestamp ?? ''))}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Link href={`tel:${property.owner.phone}`} target="_blank">
-                        <Button variant="success">
-                          <PhoneIcon />
-                          {property.owner.phone}
-                        </Button>
-                      </Link>
-                      <Link href={`https://zalo.me/${property.owner.phone}`} target="_blank">
-                        <Button className="bg-[#0d6efd] hover:bg-[#0d6efd]/90">
-                          <PhoneIcon />
-                          Liên hệ Zalo
-                        </Button>
-                      </Link>
+                      </span>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
+                  <div className="flex w-full flex-col items-center gap-3">
+                    <Link href={`tel:${property.owner.phone}`} target="_blank">
+                      <Button variant="success">
+                        <PhoneIcon />
+                        {property.owner.phone}
+                      </Button>
+                    </Link>
+                    <Link href={`https://zalo.me/${property.owner.phone}`} target="_blank">
+                      <Button className="bg-[#0d6efd]">
+                        <PhoneIcon />
+                        Liên hệ Zalo
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          )}
+          <Suspense fallback={<HighlightedPropertiesSkeleton />}>
+            <HighlightedProperties />
+          </Suspense>
+          <HighlightedNews />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function PropertyDetailsNotFound() {
+  return (
+    <div className="container m-auto mt-12 flex flex-col gap-16 xl:max-w-6xl!">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <div className="space-y-20">
+            <div className="flex flex-col items-center gap-4">
+              <Image src="/result-not-found.png" alt="not found" width={300} height={300} />
+              <p className="w-2/3 text-center">Bài đăng không tồn tại hoặc đã bị xóa, hết hạn.</p>
+            </div>
+            <Suspense fallback={<RecommendedPropertiesSkeleton />}>
+              <RecommendedProperties />
+            </Suspense>
+          </div>
           <Suspense fallback={<RecommendedPropertiesSkeleton />}>
             <RecommendedProperties />
           </Suspense>
         </div>
         <div className="col-span-1 flex flex-col gap-6">
-          <section>
-            <Card>
-              <CardContent className="flex flex-col items-center gap-6">
-                <UserAvatar user={property.owner} className="size-24" />
-                <div className="flex flex-col items-center gap-3">
-                  <div className="text-base font-medium">{property.owner.displayName}</div>
-                  <div className="flex items-center gap-1 text-xs">
-                    <span>
-                      Tham gia từ ngày{' '}
-                      {new Intl.DateTimeFormat('vi-VN', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                      }).format(new Date(property.owner.createTimestamp ?? ''))}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex w-full flex-col items-center gap-3">
-                  <Link href={`tel:${property.owner.phone}`} target="_blank">
-                    <Button variant="success">
-                      <PhoneIcon />
-                      {property.owner.phone}
-                    </Button>
-                  </Link>
-                  <Link href={`https://zalo.me/${property.owner.phone}`} target="_blank">
-                    <Button className="bg-[#0d6efd]">
-                      <PhoneIcon />
-                      Liên hệ Zalo
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-          <HighlightedProperties />
+          <Suspense fallback={<HighlightedPropertiesSkeleton />}>
+            <HighlightedProperties />
+          </Suspense>
           <HighlightedNews />
         </div>
       </div>
@@ -200,21 +267,21 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
 
 export function PropertyDetailsPageSkeleton() {
   return (
-    <div className="m-auto mt-12 flex w-6xl flex-col gap-16">
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 flex flex-col gap-6">
+    <div className="container m-auto mt-12 flex flex-col gap-16 xl:max-w-6xl!">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
           <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <Skeleton className="h-[1lh] w-[15ch]" />
+            <BreadcrumbList className="flex-nowrap">
+              <BreadcrumbItem className="basis-1/8 text-nowrap">
+                <Skeleton className="h-[1lh] w-full" />
               </BreadcrumbItem>
               <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <Skeleton className="h-[1lh] w-[10ch]" />
+              <BreadcrumbItem className="basis-1/8 text-nowrap">
+                <Skeleton className="h-[1lh] w-full" />
               </BreadcrumbItem>
               <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <Skeleton className="h-[1lh] w-[10ch]" />
+              <BreadcrumbItem className="basis-1/8 text-nowrap">
+                <Skeleton className="h-[1lh] w-full" />
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem className="grow">
@@ -228,7 +295,7 @@ export function PropertyDetailsPageSkeleton() {
                 <Skeleton className="size-full rounded-none" />
               </div>
               <CardContent>
-                <div className="flex justify-center gap-3">
+                <div className="flex flex-wrap justify-center gap-3">
                   {Array.from({ length: 8 }).map((_, index) => (
                     <div className="aspect-square h-16" key={`property-image-${index}`}>
                       <Skeleton className="size-full" />
@@ -248,29 +315,29 @@ export function PropertyDetailsPageSkeleton() {
                 <div className="text-xl font-medium">
                   <Skeleton className="h-[1lh] w-1/3" />
                 </div>
-                <div className="grid grid-cols-5 gap-6">
-                  <div className="col-span-1">Diện tích:</div>
-                  <div className="col-span-4">
+                <div className="xs:gap-x-6 xs:grid-cols-5 grid grid-cols-2 gap-y-6">
+                  <div className="xs:col-span-2 col-span-1 sm:col-span-1">Diện tích:</div>
+                  <div className="xs:col-span-3 col-span-1 sm:col-span-4">
                     <Skeleton className="h-[1lh] w-[5ch]" />
                   </div>
-                  <div className="col-span-1">Tỉnh/Thành phố:</div>
-                  <div className="col-span-4">
+                  <div className="xs:col-span-2 col-span-1 sm:col-span-1">Tỉnh/Thành phố:</div>
+                  <div className="xs:col-span-3 col-span-1 sm:col-span-4">
                     <Skeleton className="h-[1lh] w-[10ch]" />
                   </div>
-                  <div className="col-span-1">Quận/Huyện:</div>
-                  <div className="col-span-4">
+                  <div className="xs:col-span-2 col-span-1 sm:col-span-1">Quận/Huyện:</div>
+                  <div className="xs:col-span-3 col-span-1 sm:col-span-4">
                     <Skeleton className="h-[1lh] w-[10ch]" />
                   </div>
-                  <div className="col-span-1">Phường/Xã:</div>
-                  <div className="col-span-4">
+                  <div className="xs:col-span-2 col-span-1 sm:col-span-1">Phường/Xã:</div>
+                  <div className="xs:col-span-3 col-span-1 sm:col-span-4">
                     <Skeleton className="h-[1lh] w-[10ch]" />
                   </div>
-                  <div className="col-span-1">Địa chỉ:</div>
-                  <div className="col-span-4">
+                  <div className="xs:col-span-2 col-span-1 sm:col-span-1">Địa chỉ:</div>
+                  <div className="xs:col-span-3 col-span-1 sm:col-span-4">
                     <Skeleton className="h-[1lh] w-full" />
                   </div>
-                  <div className="col-span-1">Ngày đăng:</div>
-                  <div className="col-span-4">
+                  <div className="xs:col-span-2 col-span-1 sm:col-span-1">Ngày đăng:</div>
+                  <div className="xs:col-span-3 col-span-1 sm:col-span-4">
                     <Skeleton className="h-[1lh] w-1/3" />
                   </div>
                 </div>
@@ -294,27 +361,23 @@ export function PropertyDetailsPageSkeleton() {
                 </div>
                 <Separator />
                 <h2 className="text-base font-bold">Thông tin liên hệ</h2>
-                <div className="flex items-center gap-10">
+                <div className="max-xs:flex-col flex items-center gap-x-10 gap-y-3">
                   <Avatar className="size-24">
                     <AvatarFallback>
                       <Skeleton className="size-full" />
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col gap-3">
-                    <div className="text-xl font-medium">
-                      <Skeleton className="h-[1lh] w-[15ch]" />
-                    </div>
-                    <div className="flex items-center gap-1 text-xs">
-                      <span>
-                        <Skeleton className="h-[1lh] w-[10ch]" />
-                      </span>
-                      <DotIcon className="text-muted-foreground" />
-                      <span>
+                    <div className="flex flex-col gap-1.5">
+                      <div className="max-xs:justify-center flex text-xl font-medium">
+                        <Skeleton className="h-[1lh] w-[15ch]" />
+                      </div>
+                      <div className="max-xs:justify-center flex items-center gap-1 text-xs">
                         <Skeleton className="h-[1lh] w-[25ch]" />
-                      </span>
+                      </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Skeleton className="h-10 w-[20ch]" />
+                      <Skeleton className="h-10 w-[15ch]" />
                       <Skeleton className="h-10 w-[15ch]" />
                     </div>
                   </div>
@@ -322,14 +385,12 @@ export function PropertyDetailsPageSkeleton() {
               </CardContent>
             </Card>
           </section>
-          <section className="flex flex-col gap-6">
-            <h2 className="mt-10 text-lg font-semibold">Có thể bạn quan tâm</h2>
-            <HorizontalPropertyCardSkeleton />
-            <HorizontalPropertyCardSkeleton />
-          </section>
+          <Suspense fallback={<RecommendedPropertiesSkeleton />}>
+            <RecommendedProperties />
+          </Suspense>
         </div>
         <div className="col-span-1 flex flex-col gap-6">
-          <section>
+          <section className="max-lg:hidden">
             <Card>
               <CardContent className="flex flex-col items-center gap-6">
                 <Avatar className="size-24">
@@ -337,26 +398,26 @@ export function PropertyDetailsPageSkeleton() {
                     <Skeleton className="size-full" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="text-base font-medium">
-                  <Skeleton className="h-[1lh] w-[15ch]" />
-                </div>
-                <div className="flex items-center gap-1 text-xs">
-                  <span>
-                    <Skeleton className="h-[1lh] w-[10ch]" />
-                  </span>
-                  <DotIcon className="text-muted-foreground" />
-                  <span>
-                    <Skeleton className="h-[1lh] w-[25ch]" />
-                  </span>
+                <div className="flex flex-col items-center gap-3">
+                  <div className="text-base font-medium">
+                    <Skeleton className="h-[1lh] w-[15ch]" />
+                  </div>
+                  <div className="flex items-center gap-1 text-xs">
+                    <span>
+                      <Skeleton className="h-[1lh] w-[25ch]" />
+                    </span>
+                  </div>
                 </div>
                 <div className="flex w-full flex-col items-center gap-3">
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-[20ch]" />
+                  <Skeleton className="h-10 w-[15ch]" />
                 </div>
               </CardContent>
             </Card>
           </section>
-          <HighlightedProperties />
+          <Suspense fallback={<HighlightedPropertiesSkeleton />}>
+            <HighlightedProperties />
+          </Suspense>
           <HighlightedNews />
         </div>
       </div>

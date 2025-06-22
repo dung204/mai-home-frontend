@@ -248,21 +248,29 @@ export function PropertiesPageSkeleton() {
                 <div className="grid grid-cols-2">
                   <Button variant="link" className="col-span-1 w-max p-0! text-base">
                     <ChevronRight />
-                    Dưới 20m²
+                    <span>
+                      Dưới 20m<sup>2</sup>
+                    </span>
                   </Button>
                   <Button variant="link" className="col-span-1 w-max p-0! text-base">
                     <ChevronRight />
-                    Từ 20m² - 30m²
+                    <span>
+                      Từ 20m<sup>2</sup> - 30m<sup>2</sup>
+                    </span>
                   </Button>
                   <Button variant="link" className="col-span-1 w-max p-0! text-base">
                     <ChevronRight />
-                    Từ 30m² - 40m²
+                    <span>
+                      Từ 30m<sup>2</sup> - 40m<sup>2</sup>
+                    </span>
                   </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <HighlightedProperties />
+          <Suspense fallback={<HighlightedPropertiesSkeleton />}>
+            <HighlightedProperties />
+          </Suspense>
           <HighlightedNews />
         </div>
       </div>

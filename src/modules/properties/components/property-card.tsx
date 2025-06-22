@@ -154,7 +154,7 @@ export function HorizontalPropertyCardSkeleton() {
     <Card>
       <CardContent>
         <div className="flex gap-6">
-          <div className="aspect-square h-64">
+          <div className="aspect-square w-32 sm:w-64">
             <Skeleton className="size-full" />
           </div>
           <div className="flex w-full flex-col gap-4">

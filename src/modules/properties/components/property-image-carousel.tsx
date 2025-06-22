@@ -112,7 +112,7 @@ function Thumbnails({ property, ref, onThumbnailClick }: ThumbnailsProps) {
   );
 
   return (
-    <div className="flex justify-center gap-4">
+    <div className="flex flex-wrap justify-center gap-4">
       {property.videos.map((video, index) => (
         <div
           className={cn('relative aspect-square h-16 cursor-pointer rounded-md bg-black/50', {

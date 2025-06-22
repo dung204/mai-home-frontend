@@ -215,7 +215,7 @@ function DesktopHeaderNav() {
 
 function DehydratedMobileHeaderNav() {
   return (
-    <nav className="flex items-center gap-2 xl:hidden">
+    <nav className="flex items-center gap-4 xl:hidden">
       <Link href="/">
         <div className="relative size-20">
           <Image
@@ -233,9 +233,16 @@ function DehydratedMobileHeaderNav() {
 
 function DehydratedDesktopHeaderNav() {
   return (
-    <nav className="flex items-center gap-4 max-xl:hidden">
+    <nav className="flex items-center gap-2 max-xl:hidden">
       <Link href="/">
-        <Image src="/mai-home-logo.png" alt="Mai Home Logo" width={90} height={90} />
+        <div className="relative size-20">
+          <Image
+            src="/mai-home-logo.png"
+            alt="Mai Home Logo"
+            fill
+            className="object-cover object-center"
+          />
+        </div>
       </Link>
       <Link href="/properties?category=ROOM">
         <Button variant="link" className="text-base font-medium text-black capitalize">

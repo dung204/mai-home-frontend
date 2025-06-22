@@ -1,4 +1,3 @@
-import { envClient } from '@/base/config/env-client.config';
 import { HttpClient } from '@/base/lib';
 import { SuccessResponse } from '@/base/types';
 
@@ -28,9 +27,7 @@ class PropertiesService extends HttpClient {
   }
 
   public getPropertyById(id: string) {
-    return this.get<SuccessResponse<Property>>(`/properties/${id}`, {
-      baseURL: envClient.NEXT_PUBLIC_API_URL,
-    });
+    return this.get<SuccessResponse<Property>>(`/properties/${id}`);
   }
 
   public createProperty(payload: CreatePropertySchema) {
