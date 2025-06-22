@@ -250,9 +250,6 @@ export function PropertyDetailsNotFound() {
               <RecommendedProperties />
             </Suspense>
           </div>
-          <Suspense fallback={<RecommendedPropertiesSkeleton />}>
-            <RecommendedProperties />
-          </Suspense>
         </div>
         <div className="col-span-1 flex flex-col gap-6">
           <Suspense fallback={<HighlightedPropertiesSkeleton />}>
