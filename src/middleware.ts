@@ -74,6 +74,10 @@ async function handleRefreshToken(refreshToken: string) {
   // Should not use authService, since that service is for client side
   const res = await fetch(`${envServer.API_URL}auth/refresh`, {
     method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({ refreshToken }),
   });
 

@@ -23,7 +23,11 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
   const [step, setStep] = useState(1);
   const [registerData, setRegisterData] = useState<Partial<LoginSchema>>({});
 
-  const { mutateAsync: triggerRegister, error: step2Error } = useMutation({
+  const {
+    mutateAsync: triggerRegister,
+    error: step2Error,
+    isPending: step2Loading,
+  } = useMutation({
     mutationFn: (payload: RegisterSchema) => authService.register(payload),
     onSuccess: async ({ data }) => {
       await axios.post('/api/auth/set-cookie', {
@@ -52,7 +56,11 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
     },
   });
 
-  const { mutateAsync: triggerUpdateUser, error: step3Error } = useMutation({
+  const {
+    mutateAsync: triggerUpdateUser,
+    error: step3Error,
+    isPending: step3Loading,
+  } = useMutation({
     mutationFn: (payload: UpdateUserSchema) => userService.updateUserProfile(payload),
     onSuccess: async () => onRegisterSuccess?.(),
   });
@@ -73,6 +81,7 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
     case 2:
       return (
         <RegisterStep2
+          loading={step2Loading}
           error={step2Error}
           onStepComplete={({ password }) => {
             triggerRegister({
@@ -84,11 +93,16 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
       );
     case 3:
       return (
-        <RegisterFormStep3 error={step3Error} onStepComplete={(data) => triggerUpdateUser(data)} />
+        <RegisterFormStep3
+          error={step3Error}
+          loading={step3Loading}
+          onStepComplete={(data) => triggerUpdateUser(data)}
+        />
       );
     case 3.1:
       return (
         <RegisterFormStep31
+          loading={step3Loading}
           error={step3Error}
           onStepComplete={(data) => {
             triggerUpdateUser(data);
@@ -103,6 +117,7 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
 function RegisterStep1({
   onStepComplete,
 }: {
+  loading?: boolean;
   onStepComplete?: (data: { identifier: string }) => void;
 }) {
   return (
@@ -148,13 +163,15 @@ function RegisterStep1({
 
 type RegisterStep2Props = {
   error?: Error | null;
+  loading?: boolean;
   onStepComplete?: (data: { password: string }) => void;
 };
 
-function RegisterStep2({ onStepComplete }: RegisterStep2Props) {
+function RegisterStep2({ loading, onStepComplete }: RegisterStep2Props) {
   return (
     <div className="space-y-2">
       <Form
+        loading={loading}
         className="flex flex-col gap-4"
         schema={z
           .object({
@@ -234,10 +251,11 @@ function RegisterStep2({ onStepComplete }: RegisterStep2Props) {
 
 type RegisterFormStep3Props = {
   error?: Error | null;
+  loading?: boolean;
   onStepComplete?: (data: { displayName: string; phone: string }) => void;
 };
 
-function RegisterFormStep3({ onStepComplete, error }: RegisterFormStep3Props) {
+function RegisterFormStep3({ loading, onStepComplete, error }: RegisterFormStep3Props) {
   return (
     <div className="space-y-2">
       {error && (
@@ -250,6 +268,7 @@ function RegisterFormStep3({ onStepComplete, error }: RegisterFormStep3Props) {
         </Alert>
       )}
       <Form
+        loading={loading}
         className="flex flex-col gap-4"
         schema={updateUserSchema
           .pick({
@@ -314,10 +333,11 @@ function RegisterFormStep3({ onStepComplete, error }: RegisterFormStep3Props) {
 
 type RegisterFormStep31Props = {
   error?: Error | null;
+  loading?: boolean;
   onStepComplete?: (data: { displayName: string }) => void;
 };
 
-function RegisterFormStep31({ onStepComplete, error }: RegisterFormStep31Props) {
+function RegisterFormStep31({ loading, onStepComplete, error }: RegisterFormStep31Props) {
   return (
     <div className="space-y-2">
       {error && (
@@ -330,6 +350,7 @@ function RegisterFormStep31({ onStepComplete, error }: RegisterFormStep31Props) 
         </Alert>
       )}
       <Form
+        loading={loading}
         className="flex flex-col gap-4"
         schema={updateUserSchema
           .pick({
