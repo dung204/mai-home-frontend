@@ -63,15 +63,6 @@ export function Footer() {
         <p>
           Hotline: <Link href="tel:090001005">090001005</Link>
         </p>
-        <div className="flex items-center gap-6">
-          <Image
-            src="/ministry-of-industry-and-trade.png"
-            alt="Ministry of Industry and Trade"
-            width={104}
-            height={31}
-          />
-          <Image src="/dmca.png" alt="DMCA" width={76} height={38} />
-        </div>
       </div>
     </footer>
   );

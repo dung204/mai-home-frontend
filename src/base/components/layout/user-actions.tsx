@@ -1,6 +1,5 @@
 'use client';
 
-import axios from 'axios';
 import {
   ChevronDown,
   FilePlus2Icon,
@@ -12,23 +11,12 @@ import {
   UserPlusIcon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ComponentProps, useState } from 'react';
 
-import { useAuthDialog } from '@/base/providers';
+import { useAuthDialog, useConfirmLogoutDialog } from '@/base/providers';
 import { User, UserAvatar } from '@/modules/users';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '../ui/alert-dialog';
 import { Avatar, AvatarFallback } from '../ui/avatar';
-import { Button, buttonVariantsFn } from '../ui/button';
+import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Skeleton } from '../ui/skeleton';
 
@@ -37,18 +25,8 @@ interface UserActionsProps {
 }
 
 export function UserActions({ user }: UserActionsProps) {
-  const pathname = usePathname();
-  const { setOpen, setMode, setVersion } = useAuthDialog();
-  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
-
-  const handleLogout = async () => {
-    await axios.delete('/api/auth/delete-cookie');
-    if (pathname.startsWith('/user')) {
-      window.location.href = '/';
-    } else {
-      window.location.reload();
-    }
-  };
+  const { setOpen: setAuthDialogOpen, setMode, setVersion } = useAuthDialog();
+  const { setOpen: setConfirmLogoutDialogOpen } = useConfirmLogoutDialog();
 
   if (!user) {
     return (
@@ -59,7 +37,7 @@ export function UserActions({ user }: UserActionsProps) {
           onClick={() => {
             setVersion((prev) => prev + 1);
             setMode('register');
-            setOpen(true);
+            setAuthDialogOpen(true);
           }}
         >
           <UserPlusIcon />
@@ -71,7 +49,7 @@ export function UserActions({ user }: UserActionsProps) {
           onClick={() => {
             setVersion((prev) => prev + 1);
             setMode('login');
-            setOpen(true);
+            setAuthDialogOpen(true);
           }}
         >
           <LogInIcon />
@@ -82,7 +60,7 @@ export function UserActions({ user }: UserActionsProps) {
           onClick={() => {
             setVersion((prev) => prev + 1);
             setMode('login');
-            setOpen(true);
+            setAuthDialogOpen(true);
           }}
         >
           <FilePlus2Icon />
@@ -179,7 +157,7 @@ export function UserActions({ user }: UserActionsProps) {
             </div>
             <div
               className="text-danger flex w-max cursor-pointer items-center gap-4 font-medium"
-              onClick={() => setLogoutConfirmOpen(true)}
+              onClick={() => setConfirmLogoutDialogOpen(true)}
             >
               <Button variant="ghost" className="bg-accent rounded-full" size="icon">
                 <LogOutIcon />
@@ -195,11 +173,6 @@ export function UserActions({ user }: UserActionsProps) {
           Đăng tin
         </Button>
       </Link>
-      <LogoutConfirmDialog
-        open={logoutConfirmOpen}
-        onOpenChange={setLogoutConfirmOpen}
-        onConfirm={handleLogout}
-      />
     </>
   );
 }
@@ -222,30 +195,5 @@ export function UserActionsSkeleton() {
         Đăng tin
       </Button>
     </>
-  );
-}
-
-interface LogoutConfirmDialogProps extends ComponentProps<typeof AlertDialog> {
-  onConfirm: () => void;
-}
-
-function LogoutConfirmDialog(props: LogoutConfirmDialogProps) {
-  return (
-    <AlertDialog {...props}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Bạn có chắc chắn muốn đăng xuất không?</AlertDialogTitle>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Không</AlertDialogCancel>
-          <AlertDialogAction
-            className={buttonVariantsFn({ variant: 'danger' })}
-            onClick={() => props.onConfirm()}
-          >
-            Có
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 }

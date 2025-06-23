@@ -1,5 +1,7 @@
 'use client';
 
+import axios from 'axios';
+import { usePathname } from 'next/navigation';
 import { ComponentProps } from 'react';
 
 import {
@@ -14,7 +16,16 @@ import {
 import { buttonVariantsFn } from '@/base/components/ui/button';
 
 export function ConfirmLogoutDialog(props: ComponentProps<typeof AlertDialog>) {
-  const handleLogout = () => {};
+  const pathname = usePathname();
+
+  const handleLogout = async () => {
+    await axios.delete('/api/auth/delete-cookie');
+    if (pathname.startsWith('/user')) {
+      window.location.href = '/';
+    } else {
+      window.location.reload();
+    }
+  };
 
   return (
     <AlertDialog {...props}>
@@ -28,7 +39,7 @@ export function ConfirmLogoutDialog(props: ComponentProps<typeof AlertDialog>) {
         <AlertDialogFooter>
           <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
           <AlertDialogAction
-            onSelect={handleLogout}
+            onClick={handleLogout}
             className={buttonVariantsFn({ variant: 'danger' })}
           >
             Tiếp tục

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { baseEntitySchema } from '@/base/types';
 
 export const userSchema = baseEntitySchema.extend({
-  email: z.string(),
+  email: z.string().nullable(),
   phone: z.string().nullable(),
   avatar: z.string().nullable(),
   displayName: z
