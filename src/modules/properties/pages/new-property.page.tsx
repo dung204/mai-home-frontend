@@ -210,7 +210,7 @@ export function NewPropertyPage() {
           <h1 className="text-2xl font-medium">Khu vực</h1>
           <LocationForm
             ref={locationFormRef}
-            className="grid grid-cols-2"
+            className="xs:grid-cols-2 grid"
             onSuccessSubmit={() => {}}
           />
         </CardContent>

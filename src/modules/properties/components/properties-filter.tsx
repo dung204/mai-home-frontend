@@ -92,7 +92,7 @@ export function PropertiesFilter() {
             Bộ lọc
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="h-[100dvh] pb-8">
+        <DrawerContent className="z-[120] h-[100dvh] pb-8">
           <DrawerHeader>
             <DrawerTitle className="text-2xl">Bộ lọc</DrawerTitle>
           </DrawerHeader>

@@ -1,6 +1,8 @@
+import { Metadata } from 'next';
+
 import { NewPropertyPage } from '@/modules/properties';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Đăng tin mới',
 };
 

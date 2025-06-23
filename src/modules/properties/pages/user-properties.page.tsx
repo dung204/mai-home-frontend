@@ -101,7 +101,7 @@ export function UserPropertiesPage({ user, searchParams }: UserPropertiesPagePro
         <span>{getTitle(searchParams)}</span>
         <PropertiesFilter key={JSON.stringify(searchParams)} />
       </div>
-      <div className="grid grid-cols-4 gap-6 px-10">
+      <div className="grid gap-6 px-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {properties.map((property) => (
           <div key={property.id}>
             <VerticalPropertyCard

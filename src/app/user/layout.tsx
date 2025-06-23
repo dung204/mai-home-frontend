@@ -14,7 +14,7 @@ export default function Layout({ children }: PropsWithChildren) {
         <Suspense fallback={<DehydratedHeader />}>
           <Header className="bg-[#0E4DB3] [&_*]:text-white" />
         </Suspense>
-        <main className="bg-accent flex grow">
+        <main className="bg-accent relative flex grow">
           <Suspense fallback={<UserSidebarSkeleton />}>
             <UserSidebar />
           </Suspense>

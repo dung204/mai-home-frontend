@@ -57,7 +57,7 @@ function MobileHeaderNav({ user }: HeaderNavProps) {
       <Icon onClick={() => setMenuOpen(!menuOpen)} />
       <Sheet modal={false} open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent
-          className="h-[calc(100vh-5rem)] w-full translate-y-20 py-4 data-[state=open]:duration-[350ms] sm:max-w-full [&>button]:hidden"
+          className="z-[110] h-[calc(100vh-5rem)] w-full translate-y-20 py-4 data-[state=open]:duration-[350ms] sm:max-w-full [&>button]:hidden"
           side="left"
           onPointerDownOutside={(e) => e.preventDefault()}
           onOpenAutoFocus={(e) => e.preventDefault()}

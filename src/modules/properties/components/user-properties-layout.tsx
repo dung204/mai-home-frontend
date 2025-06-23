@@ -17,12 +17,15 @@ export function UserPropertiesLayout({ children }: PropsWithChildren) {
   if (pathname === '/user/properties/new') {
     return (
       <>
-        <section className="z-50 flex flex-col gap-4 bg-white px-10 py-6 shadow-md">
+        <section className="z-50 flex gap-4 bg-white px-10 py-6 shadow-md">
+          <div className="size-6 xl:hidden"></div>
           <h1 className="text-2xl font-medium">Đăng tin cho thuê</h1>
         </section>
         <ScrollArea className="app-scroll-area grow">
           <section className="absolute inset-0">
-            <div className="mx-auto my-10 flex w-3xl flex-col gap-8">{children}</div>
+            <div className="container mx-auto my-10 flex flex-col gap-8 md:max-w-3xl!">
+              {children}
+            </div>
             <div className="w-full px-10">
               <div className="border-muted-foreground size-full border-t">
                 <Footer />
@@ -38,7 +41,8 @@ export function UserPropertiesLayout({ children }: PropsWithChildren) {
   if (pathname.startsWith('/user/properties') && pathname.endsWith('/edit')) {
     return (
       <>
-        <section className="z-50 flex flex-col gap-4 bg-white px-10 py-6 shadow-md">
+        <section className="z-50 flex gap-4 bg-white px-10 py-6 shadow-md">
+          <div className="size-6 xl:hidden"></div>
           <h1 className="text-2xl font-medium">Chỉnh sửa bài đăng</h1>
         </section>
         <ScrollArea className="app-scroll-area grow">
@@ -59,7 +63,10 @@ export function UserPropertiesLayout({ children }: PropsWithChildren) {
   return (
     <>
       <section className="z-50 flex flex-col gap-4 bg-white px-10 pt-6 shadow-md">
-        <h1 className="text-2xl font-medium">Danh sách tin đăng</h1>
+        <div className="flex items-center gap-4">
+          <div className="size-6 xl:hidden"></div>
+          <h1 className="text-2xl font-medium">Danh sách tin đăng</h1>
+        </div>
         <div className="flex gap-10">
           <Link href="/user/properties">
             <Button

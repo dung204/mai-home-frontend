@@ -21,7 +21,7 @@ export async function Header({ className }: HeaderProps) {
     .safeParse(JSON.parse(cookieStore.get('user')?.value || '{}')).data;
 
   return (
-    <header className={cn('z-50 flex w-full flex-col bg-white shadow-md', className)}>
+    <header className={cn('flex w-full flex-col bg-white shadow-md', className)}>
       <div className="border-muted-foreground/45 flex items-center justify-between border-b px-4 xl:px-8">
         <HeaderNav user={user} />
         <div className="flex items-center">
