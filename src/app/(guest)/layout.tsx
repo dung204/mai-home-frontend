@@ -9,9 +9,6 @@ import { ScrollArea } from '@/base/components/ui/scroll-area';
 import { ScrollToTopButton } from '@/base/components/ui/scroll-to-top-button';
 import { AuthDialogProvider } from '@/base/providers';
 
-// eslint-disable-next-line camelcase
-export const experimental_ppr = true;
-
 export default async function GuestLayout({ children }: PropsWithChildren) {
   return (
     <AuthDialogProvider>

@@ -4,9 +4,6 @@ import { DehydratedHeader, Header } from '@/base/components/layout/header';
 import { AuthDialogProvider } from '@/base/providers';
 import { UserSidebar, UserSidebarSkeleton } from '@/modules/users';
 
-// eslint-disable-next-line camelcase
-export const experimental_ppr = true;
-
 export default function Layout({ children }: PropsWithChildren) {
   return (
     <AuthDialogProvider>
