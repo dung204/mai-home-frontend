@@ -15,7 +15,10 @@ export function ServicesPage() {
     <div className="container m-auto mt-12 flex flex-col gap-16 xl:max-w-6xl!">
       <Card>
         <CardContent className="flex flex-col items-center justify-center gap-10">
-          <h2 className="text-2xl font-semibold uppercase">Bảng giá đăng tin</h2>
+          <div className="space-y-2 text-center">
+            <h2 className="text-2xl font-semibold uppercase">Bảng giá đăng tin</h2>
+            <p>Áp dụng từ ngày 01/09/2025</p>
+          </div>
           <Table className="border-border border">
             <TableHeader>
               <TableRow>

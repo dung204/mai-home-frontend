@@ -4,6 +4,7 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import Image from 'next/image';
 import Link from 'next/link';
 import { ComponentProps, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Pagination, PaginationSkeleton } from '@/base/components/layout/pagination';
 import {
@@ -55,8 +56,9 @@ export function UserPropertiesPage({ user, searchParams }: UserPropertiesPagePro
 
   const { mutate: triggerDeleteProperty } = useMutation({
     mutationFn: (id: string) => propertiesService.deleteProperty(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['properties', 'all'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['properties', 'all'] });
+      toast.success('Xóa tin đăng thành công');
     },
   });
 
@@ -64,6 +66,7 @@ export function UserPropertiesPage({ user, searchParams }: UserPropertiesPagePro
     mutationFn: (id: string) => propertiesService.restoreProperty(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['properties', 'all'] });
+      toast.success('Khôi phục tin đăng thành công');
     },
   });
 
@@ -173,7 +176,7 @@ function getTitle(searchParams: PropertySearchParams & { filter?: 'active' | 'de
 export function UserPropertiesPageSkeleton() {
   return (
     <>
-      <div className="grid grid-cols-4 gap-6 px-10">
+      <div className="grid gap-6 px-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 12 }).map(() => (
           <div key={crypto.randomUUID()}>
             <VerticalPropertyCardSkeleton />

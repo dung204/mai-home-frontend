@@ -1,4 +1,5 @@
 import { HeadsetIcon, PanelRightOpenIcon } from 'lucide-react';
+import Link from 'next/link';
 
 import { Avatar, AvatarFallback } from '@/base/components/ui/avatar';
 import { Separator } from '@/base/components/ui/separator';
@@ -48,7 +49,12 @@ export async function UserSidebar() {
               <HeadsetIcon />
               <div className="flex flex-col gap-1">
                 <span className="text-xs">Liên hệ ngay để được tư vấn</span>
-                <span className="text-sm font-bold">090xxxxxxx - Ms. Linh Linh</span>
+                <span className="text-sm font-bold">
+                  <Link href="tel:0375028703" className="text-blue-500 underline">
+                    037 502 8703
+                  </Link>{' '}
+                  - Ms. Linh Linh
+                </span>
               </div>
             </div>
           </aside>
@@ -72,7 +78,12 @@ export async function UserSidebar() {
           <HeadsetIcon />
           <div className="flex flex-col gap-1">
             <span className="text-xs">Liên hệ ngay để được tư vấn</span>
-            <span className="text-sm font-bold">090xxxxxxx - Ms. Linh Linh</span>
+            <span className="text-sm font-bold">
+              <Link href="tel:0375028703" className="text-blue-500 underline">
+                037 502 8703
+              </Link>{' '}
+              - Ms. Linh Linh
+            </span>
           </div>
         </div>
       </aside>
@@ -120,7 +131,12 @@ export function UserSidebarSkeleton() {
           <HeadsetIcon />
           <div className="flex flex-col gap-1">
             <span className="text-xs">Liên hệ ngay để được tư vấn</span>
-            <span className="text-sm font-bold">090xxxxxxx - Ms. Linh Linh</span>
+            <span className="text-sm font-bold">
+              <Link href="tel:0375028703" className="text-blue-500 underline">
+                037 502 8703
+              </Link>{' '}
+              - Ms. Linh Linh
+            </span>
           </div>
         </div>
       </aside>

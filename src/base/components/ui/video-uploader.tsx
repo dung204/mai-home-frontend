@@ -1,6 +1,6 @@
 'use client';
 
-import { PlayCircleIcon, UploadIcon, VideoIcon, XIcon } from 'lucide-react';
+import { PlayCircleIcon, PlusIcon, Trash2Icon, UploadIcon, VideoIcon, XIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { ComponentProps, DragEventHandler, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -9,22 +9,45 @@ import { cn } from '@/base/lib';
 import { ImageUtils } from '@/base/utils';
 import { ImagePayload, VideoPayload } from '@/modules/media';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from './alert-dialog';
 import { Badge } from './badge';
+import { buttonVariantsFn } from './button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './dialog';
 import { LoadingIndicator } from './loading-indicator';
 
 interface VideoUploaderProps
   extends Omit<ComponentProps<'input'>, 'type' | 'multiple' | 'accept' | 'onChange'> {
   videos?: VideoPayload[];
+  indexesToDelete?: number[];
   onVideosChange?: (images: ImagePayload[]) => void;
+  onIndexesToDeleteChange?: (indexes: number[]) => void;
 }
 
-export function VideoUploader({ className, videos, onVideosChange, ...props }: VideoUploaderProps) {
+export function VideoUploader({
+  className,
+  videos,
+  indexesToDelete,
+  onVideosChange,
+  onIndexesToDeleteChange,
+  ...props
+}: VideoUploaderProps) {
   const [isLoadingFromLocal, setIsUploadingFromLocal] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [uploadedVideos, setUploadedVideos] = useState<VideoPayload[]>(videos ?? []);
   const [previewVideoUrl, setPreviewVideoUrl] = useState<string>('');
   const [showPreviewVideoDialog, setShowPreviewVideoDialog] = useState(false);
+  const [indexesToRemove, setIndexesToRemove] = useState<number[]>(indexesToDelete ?? []);
+  const [indexToDelete, setIndexToDelete] = useState<number | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const Icon = getIcon(isDraggingOver, isLoadingFromLocal);
@@ -90,6 +113,27 @@ export function VideoUploader({ className, videos, onVideosChange, ...props }: V
     Array.from(e.dataTransfer.files).forEach(handleFileInputChange);
   };
 
+  const handleRemoveVideo = (index: number) => {
+    // If the image is not uploaded from device (i.e., it is a local file), show the delete dialog
+    if (!uploadedVideos[index]?.file) {
+      setIndexToDelete(index);
+      setShowDeleteDialog(true);
+      return;
+    }
+
+    const newUploadedVideos = uploadedVideos.filter((_, idx) => idx !== index);
+    onVideosChange?.(newUploadedVideos);
+    setUploadedVideos(newUploadedVideos);
+  };
+
+  const handleRestoreVideo = (index: number) => {
+    const newIndexesToRemove = indexesToRemove.filter((idx) => idx !== index);
+    setIndexesToRemove(newIndexesToRemove);
+    onIndexesToDeleteChange?.(newIndexesToRemove);
+    setIndexToDelete(null);
+    setShowDeleteDialog(false);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -144,25 +188,33 @@ export function VideoUploader({ className, videos, onVideosChange, ...props }: V
               key={`image_upload_${crypto.randomUUID()}`}
             >
               <Badge
-                variant="danger"
+                variant={indexesToRemove.includes(index) ? 'success' : 'danger'}
                 className="absolute top-0 right-0 z-50 translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full p-1.5"
-                onClick={() => {
-                  const newUploadedVideos = uploadedVideos.filter((_, idx) => idx !== index);
-                  URL.revokeObjectURL(video.previewUrl);
-                  onVideosChange?.(newUploadedVideos);
-                  setUploadedVideos(newUploadedVideos);
-                }}
+                onClick={() =>
+                  indexesToRemove.includes(index)
+                    ? handleRestoreVideo(index)
+                    : handleRemoveVideo(index)
+                }
               >
-                <XIcon />
+                {indexesToRemove.includes(index) ? <PlusIcon /> : <XIcon />}
               </Badge>
               <div
-                className="absolute inset-0 z-40 flex size-full items-center justify-center bg-black/25 opacity-0 transition-opacity group-hover:opacity-100"
+                className={cn(
+                  'absolute inset-0 z-40 flex size-full items-center justify-center bg-black/25 opacity-0 transition-opacity group-hover:opacity-100',
+                  {
+                    'bg-white/50 opacity-100': indexesToRemove.includes(index),
+                  },
+                )}
                 onClick={() => {
                   setPreviewVideoUrl(video.previewUrl);
                   setShowPreviewVideoDialog(true);
                 }}
               >
-                <PlayCircleIcon className="text-white" />
+                {indexesToRemove.includes(index) ? (
+                  <Trash2Icon className="text-danger size-10" />
+                ) : (
+                  <PlayCircleIcon className="text-white" />
+                )}
               </div>
               <NextImage
                 src={video.thumbnailUrl}
@@ -178,6 +230,17 @@ export function VideoUploader({ className, videos, onVideosChange, ...props }: V
         previewUrl={previewVideoUrl}
         open={showPreviewVideoDialog}
         onOpenChange={setShowPreviewVideoDialog}
+      />
+      <ConfirmDeleteImageDialog
+        indexToDelete={indexToDelete ?? -1}
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={(indexToDelete) => {
+          const newIndexesToRemove = [...indexesToRemove, indexToDelete];
+          setIndexesToRemove(newIndexesToRemove);
+          onIndexesToDeleteChange?.(newIndexesToRemove);
+          setIndexToDelete(null);
+        }}
       />
     </>
   );
@@ -224,5 +287,40 @@ function PreviewVideoDialog({ previewUrl, onOpenChange, ...props }: PreviewVideo
         </DialogHeader>
       </DialogContent>
     </Dialog>
+  );
+}
+
+interface ConfirmDeleteImageDialogProps extends ComponentProps<typeof AlertDialog> {
+  indexToDelete: number;
+  onConfirm: (indexToDelete: number) => void;
+}
+
+function ConfirmDeleteImageDialog({
+  indexToDelete,
+  open,
+  onOpenChange,
+  onConfirm,
+}: ConfirmDeleteImageDialogProps) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Bạn muốn xóa ảnh này?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Hành động này sẽ đánh dấu để xóa ảnh này khi bạn lưu thay đổi bài viết. Bạn có thể nhấn
+            vào nút &quot;+&quot; để bỏ đánh dấu xóa ảnh này.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Hủy</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => onConfirm(indexToDelete)}
+            className={buttonVariantsFn({ variant: 'danger' })}
+          >
+            Xóa
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

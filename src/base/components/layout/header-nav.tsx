@@ -14,28 +14,29 @@ import { Button } from '../ui/button';
 import { Sheet, SheetContent } from '../ui/sheet';
 
 interface HeaderNavProps {
+  brandImage?: string;
   user: Omit<User, 'createTimestamp' | 'updateTimestamp' | 'deleteTimestamp'> | undefined;
 }
 
-export function HeaderNav({ user }: HeaderNavProps) {
+export function HeaderNav({ user, brandImage }: HeaderNavProps) {
   return (
     <>
-      <MobileHeaderNav user={user} />
-      <DesktopHeaderNav />
+      <MobileHeaderNav user={user} brandImage={brandImage} />
+      <DesktopHeaderNav brandImage={brandImage} />
     </>
   );
 }
 
-export function DehydratedHeaderNav() {
+export function DehydratedHeaderNav({ brandImage }: Omit<HeaderNavProps, 'user'>) {
   return (
     <>
-      <DehydratedMobileHeaderNav />
-      <DehydratedDesktopHeaderNav />
+      <DehydratedMobileHeaderNav brandImage={brandImage} />
+      <DehydratedDesktopHeaderNav brandImage={brandImage} />
     </>
   );
 }
 
-function MobileHeaderNav({ user }: HeaderNavProps) {
+function MobileHeaderNav({ brandImage, user }: HeaderNavProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -47,7 +48,7 @@ function MobileHeaderNav({ user }: HeaderNavProps) {
       <Link href="/">
         <div className="relative size-20">
           <Image
-            src="/mai-home-logo.png"
+            src={brandImage ?? '/mai-home-logo.png'}
             alt="Mai Home Logo"
             fill
             className="object-cover object-center"
@@ -128,7 +129,7 @@ function MobileHeaderNav({ user }: HeaderNavProps) {
               </Button>
             </Link>
             <div className="px-4 sm:hidden">
-              <NewPropertyButton user={user} />
+              <NewPropertyButton user={user} onClick={() => setMenuOpen(false)} />
             </div>
           </div>
         </SheetContent>
@@ -137,7 +138,7 @@ function MobileHeaderNav({ user }: HeaderNavProps) {
   );
 }
 
-function DesktopHeaderNav() {
+function DesktopHeaderNav({ brandImage }: Omit<HeaderNavProps, 'user'>) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -146,7 +147,7 @@ function DesktopHeaderNav() {
       <Link href="/">
         <div className="relative size-20">
           <Image
-            src="/mai-home-logo.png"
+            src={brandImage ?? '/mai-home-logo.png'}
             alt="Mai Home Logo"
             fill
             className="object-cover object-center"
@@ -213,13 +214,13 @@ function DesktopHeaderNav() {
   );
 }
 
-function DehydratedMobileHeaderNav() {
+function DehydratedMobileHeaderNav({ brandImage }: Omit<HeaderNavProps, 'user'>) {
   return (
     <nav className="flex items-center gap-4 xl:hidden">
       <Link href="/">
         <div className="relative size-20">
           <Image
-            src="/mai-home-logo.png"
+            src={brandImage ?? '/mai-home-logo.png'}
             alt="Mai Home Logo"
             fill
             className="object-cover object-center"
@@ -231,13 +232,13 @@ function DehydratedMobileHeaderNav() {
   );
 }
 
-function DehydratedDesktopHeaderNav() {
+function DehydratedDesktopHeaderNav({ brandImage }: Omit<HeaderNavProps, 'user'>) {
   return (
     <nav className="flex items-center gap-2 max-xl:hidden">
       <Link href="/">
         <div className="relative size-20">
           <Image
-            src="/mai-home-logo.png"
+            src={brandImage ?? '/mai-home-logo.png'}
             alt="Mai Home Logo"
             fill
             className="object-cover object-center"

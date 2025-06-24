@@ -12,3 +12,4 @@ export * from './pages/properties.page';
 export * from './pages/property-details.page';
 export * from './pages/user-properties.page';
 export * from './pages/new-property.page';
+export * from './pages/edit-property.page';

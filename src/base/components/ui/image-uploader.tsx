@@ -1,6 +1,6 @@
 'use client';
 
-import { EyeIcon, ImageIcon, UploadIcon, XIcon } from 'lucide-react';
+import { EyeIcon, ImageIcon, PlusIcon, Trash2Icon, UploadIcon, XIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { ComponentProps, DragEventHandler, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -9,22 +9,45 @@ import { cn } from '@/base/lib';
 import { ImageUtils } from '@/base/utils';
 import { ImagePayload } from '@/modules/media';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from './alert-dialog';
 import { Badge } from './badge';
+import { buttonVariantsFn } from './button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './dialog';
 import { LoadingIndicator } from './loading-indicator';
 
 interface ImageUploaderProps
   extends Omit<ComponentProps<'input'>, 'type' | 'multiple' | 'accept' | 'onChange'> {
   images?: ImagePayload[];
+  indexesToDelete?: number[];
   onImagesChange?: (images: ImagePayload[]) => void;
+  onIndexesToDeleteChange?: (indexes: number[]) => void;
 }
 
-export function ImageUploader({ className, images, onImagesChange, ...props }: ImageUploaderProps) {
+export function ImageUploader({
+  className,
+  images,
+  indexesToDelete,
+  onImagesChange,
+  onIndexesToDeleteChange,
+  ...props
+}: ImageUploaderProps) {
   const [isLoadingFromLocal, setIsUploadingFromLocal] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<ImagePayload[]>(images ?? []);
   const [previewImageUrl, setPreviewImageUrl] = useState<string>('');
   const [showPreviewImageDialog, setShowPreviewImageDialog] = useState(false);
+  const [indexesToRemove, setIndexesToRemove] = useState<number[]>(indexesToDelete ?? []);
+  const [indexToDelete, setIndexToDelete] = useState<number | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const Icon = getIcon(isDraggingOver, isLoadingFromLocal);
@@ -87,6 +110,27 @@ export function ImageUploader({ className, images, onImagesChange, ...props }: I
     Array.from(e.dataTransfer.files).forEach(handleFileInputChange);
   };
 
+  const handleRemoveImage = (index: number) => {
+    // If the image is not uploaded from device (i.e., it is a local file), show the delete dialog
+    if (!uploadedImages[index]?.file) {
+      setIndexToDelete(index);
+      setShowDeleteDialog(true);
+      return;
+    }
+
+    const newUploadedImages = uploadedImages.filter((_, idx) => idx !== index);
+    onImagesChange?.(newUploadedImages);
+    setUploadedImages(newUploadedImages);
+  };
+
+  const handleRestoreImage = (index: number) => {
+    const newIndexesToDelete = indexesToRemove.filter((idx) => idx !== index);
+    setIndexesToRemove(newIndexesToDelete);
+    onIndexesToDeleteChange?.(newIndexesToDelete);
+    setIndexToDelete(null);
+    setShowDeleteDialog(false);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -141,24 +185,33 @@ export function ImageUploader({ className, images, onImagesChange, ...props }: I
               key={`image_upload_${crypto.randomUUID()}`}
             >
               <Badge
-                variant="danger"
+                variant={indexesToRemove.includes(index) ? 'success' : 'danger'}
                 className="absolute top-0 right-0 z-50 translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full p-1.5"
-                onClick={() => {
-                  const newUploadedImages = uploadedImages.filter((_, idx) => idx !== index);
-                  onImagesChange?.(newUploadedImages);
-                  setUploadedImages(newUploadedImages);
-                }}
+                onClick={() =>
+                  indexesToRemove.includes(index)
+                    ? handleRestoreImage(index)
+                    : handleRemoveImage(index)
+                }
               >
-                <XIcon />
+                {indexesToRemove.includes(index) ? <PlusIcon /> : <XIcon />}
               </Badge>
               <div
-                className="absolute inset-0 z-40 flex size-full items-center justify-center bg-black/25 opacity-0 transition-opacity group-hover:opacity-100"
+                className={cn(
+                  'absolute inset-0 z-40 flex size-full items-center justify-center bg-black/25 opacity-0 transition-opacity group-hover:opacity-100',
+                  {
+                    'bg-white/25 opacity-100': indexesToRemove.includes(index),
+                  },
+                )}
                 onClick={() => {
                   setPreviewImageUrl(image.previewUrl);
                   setShowPreviewImageDialog(true);
                 }}
               >
-                <EyeIcon className="text-white" />
+                {indexesToRemove.includes(index) ? (
+                  <Trash2Icon className="text-danger" />
+                ) : (
+                  <EyeIcon className="text-white" />
+                )}
               </div>
               <NextImage
                 src={image.previewUrl}
@@ -175,6 +228,17 @@ export function ImageUploader({ className, images, onImagesChange, ...props }: I
         open={showPreviewImageDialog}
         onOpenChange={setShowPreviewImageDialog}
       />
+      <ConfirmDeleteImageDialog
+        indexToDelete={indexToDelete ?? -1}
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={(indexToDelete) => {
+          const newIndexesToDelete = [...indexesToRemove, indexToDelete];
+          setIndexesToRemove(newIndexesToDelete);
+          onIndexesToDeleteChange?.(newIndexesToDelete);
+          setIndexToDelete(null);
+        }}
+      />
     </>
   );
 }
@@ -184,7 +248,6 @@ function getTitleText(isDraggingOver: boolean, isUploadingFromLocal: boolean) {
 
   return isDraggingOver ? 'Thả để tải lên' : 'Nhấn hoặc kéo ảnh vào đây để tải lên';
 }
-
 function getIcon(isDraggingOver: boolean, isUploadingFromLocal: boolean) {
   if (isUploadingFromLocal) return LoadingIndicator;
 
@@ -207,5 +270,40 @@ function PreviewImageDialog({ previewUrl, ...props }: PreviewImageDialogProps) {
         </DialogHeader>
       </DialogContent>
     </Dialog>
+  );
+}
+
+interface ConfirmDeleteImageDialogProps extends ComponentProps<typeof AlertDialog> {
+  indexToDelete: number;
+  onConfirm: (indexToDelete: number) => void;
+}
+
+function ConfirmDeleteImageDialog({
+  indexToDelete,
+  open,
+  onOpenChange,
+  onConfirm,
+}: ConfirmDeleteImageDialogProps) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Bạn muốn xóa ảnh này?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Hành động này sẽ đánh dấu để xóa ảnh này khi bạn lưu thay đổi bài viết. Bạn có thể nhấn
+            vào nút &quot;+&quot; để bỏ đánh dấu xóa ảnh này.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Hủy</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => onConfirm(indexToDelete)}
+            className={buttonVariantsFn({ variant: 'danger' })}
+          >
+            Xóa
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

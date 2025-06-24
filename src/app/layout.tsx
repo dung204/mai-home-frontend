@@ -32,7 +32,12 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <QueryProvider>
             <ConfirmLogoutDialogProvider>{children}</ConfirmLogoutDialogProvider>
-            <Toaster position="top-right" richColors />
+            <Toaster
+              position="top-right"
+              offset={{ top: '6.5rem' }}
+              mobileOffset={{ top: '6.5rem' }}
+              richColors
+            />
           </QueryProvider>
         </NextIntlClientProvider>
         <Analytics />

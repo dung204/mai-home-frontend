@@ -376,14 +376,14 @@ type FormFieldSpec<TFieldValues extends FieldValues = FieldValues> = {
       type: 'map';
       render?: FormFieldRenderFn<{ className?: string }>;
     } & React.ComponentProps<typeof MapContainer>)
-  | {
+  | ({
       type: 'image';
       render?: FormFieldRenderFn<{ className?: string }>;
-    }
-  | {
+    } & Omit<React.ComponentProps<typeof ImageUploader>, 'images' | 'onImagesChange'>)
+  | ({
       type: 'video';
       render?: FormFieldRenderFn<{ className?: string }>;
-    }
+    } & Omit<React.ComponentProps<typeof VideoUploader>, 'videos' | 'onVideosChange'>)
 );
 
 interface FormProps<TFieldValues extends FieldValues, TTransformedValues> {
@@ -1085,7 +1085,15 @@ function ImageFormControl({
     name: formField.name,
   });
 
-  return <ImageUploader className={className} images={images} onImagesChange={onChange} />;
+  return (
+    <ImageUploader
+      className={className}
+      images={images}
+      indexesToDelete={formField.indexesToDelete}
+      onImagesChange={onChange}
+      onIndexesToDeleteChange={formField.onIndexesToDeleteChange}
+    />
+  );
 }
 
 function VideoFormControl({
@@ -1103,7 +1111,15 @@ function VideoFormControl({
     name: formField.name,
   });
 
-  return <VideoUploader className={className} videos={videos} onVideosChange={onChange} />;
+  return (
+    <VideoUploader
+      className={className}
+      videos={videos}
+      indexesToDelete={formField.indexesToDelete}
+      onVideosChange={onChange}
+      onIndexesToDeleteChange={formField.onIndexesToDeleteChange}
+    />
+  );
 }
 
 function getDefaultValues<TFieldValues extends FieldValues, TTransformedValues>(

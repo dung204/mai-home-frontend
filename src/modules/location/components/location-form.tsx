@@ -32,21 +32,23 @@ type LocationFormProps = {
   onSuccessSubmit: SubmitHandler<LocationFormPayload>;
   onErrorSubmit?: SubmitErrorHandler<LocationFormPayload>;
   className?: string;
+  defaultValues?: LocationFormPayload;
 };
 
 export function LocationForm({
   ref,
   className,
+  defaultValues,
   onSuccessSubmit,
   onErrorSubmit,
 }: LocationFormProps) {
   const form = useForm({
     resolver: zodResolver(locationFormSchema),
     defaultValues: {
-      cityId: '',
-      districtId: '',
-      wardId: '',
-      address: '',
+      cityId: defaultValues?.cityId ?? '',
+      districtId: defaultValues?.districtId ?? '',
+      wardId: defaultValues?.wardId ?? '',
+      address: defaultValues?.address ?? '',
     },
   });
 

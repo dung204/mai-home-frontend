@@ -22,6 +22,13 @@ class MediaService extends HttpClient {
       timeout: 60000,
     });
   }
+
+  async deleteFile({ name, folder }: { name: string; folder?: string }) {
+    return this.delete('/media/delete', {
+      data: { name, folder },
+      isPrivateRoute: true,
+    });
+  }
 }
 
 export const mediaService = new MediaService();

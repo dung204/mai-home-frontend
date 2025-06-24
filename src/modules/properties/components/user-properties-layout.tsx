@@ -47,7 +47,9 @@ export function UserPropertiesLayout({ children }: PropsWithChildren) {
         </section>
         <ScrollArea className="app-scroll-area grow">
           <section className="absolute inset-0">
-            <div className="mx-auto my-10 flex w-3xl flex-col gap-8">{children}</div>
+            <div className="container mx-auto my-10 flex flex-col gap-8 md:max-w-3xl!">
+              {children}
+            </div>
             <div className="w-full px-10">
               <div className="border-muted-foreground size-full border-t">
                 <Footer />

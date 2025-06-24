@@ -13,9 +13,9 @@ import {
 
 export default function NewsLayout({ children }: PropsWithChildren) {
   return (
-    <div className="m-auto mt-12 flex w-6xl flex-col gap-16">
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 flex flex-col gap-6">
+    <div className="container m-auto mt-12 flex flex-col gap-16 xl:max-w-6xl!">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
           <section>
             <Card>
               <CardContent>

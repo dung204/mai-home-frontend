@@ -49,9 +49,13 @@ class PropertiesService extends HttpClient {
   }
 
   public restoreProperty(id: string) {
-    return this.patch(`/properties/restore/${id}`, {
-      isPrivateRoute: true,
-    });
+    return this.patch(
+      `/properties/restore/${id}`,
+      {},
+      {
+        isPrivateRoute: true,
+      },
+    );
   }
 }
 

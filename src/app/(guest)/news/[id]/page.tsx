@@ -1,6 +1,12 @@
 import * as fs from 'fs/promises';
 import { join } from 'path';
 
+type PageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
 export async function generateStaticParams() {
   const posts = (await fs.readdir(join(process.cwd(), './src/news/'))).map((file) =>
     file.replace(/\.mdx?$/, ''),
@@ -13,13 +19,7 @@ export async function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{
-    id: string;
-  }>;
-}) {
+export default async function Page({ params }: PageProps) {
   const { id } = await params;
   const { default: Post } = await import(`@/news/${id}.mdx`);
 

@@ -256,7 +256,7 @@ export function VerticalPropertyCard({
       </div>
       <CardContent className="flex flex-col gap-4">
         <Link href={`/property/${property.id}`}>
-          <span className="line-clamp-2 font-bold">{property.title}</span>
+          <span className="line-clamp-2 h-[2lh] font-bold">{property.title}</span>
         </Link>
         <div className="flex items-center gap-1">
           <PriceIcon

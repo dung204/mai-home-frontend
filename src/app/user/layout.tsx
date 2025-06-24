@@ -8,8 +8,8 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <AuthDialogProvider>
       <div className="flex h-screen flex-col">
-        <Suspense fallback={<DehydratedHeader />}>
-          <Header className="bg-[#0E4DB3] [&_*]:text-white" />
+        <Suspense fallback={<DehydratedHeader brandImage="/mai-home-logo-white.png" />}>
+          <Header brandImage="/mai-home-logo-white.png" className="bg-[#0E4DB3] [&_*]:text-white" />
         </Suspense>
         <main className="bg-accent relative flex grow">
           <Suspense fallback={<UserSidebarSkeleton />}>

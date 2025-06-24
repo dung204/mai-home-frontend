@@ -176,7 +176,7 @@ export function NewPropertyPage() {
       <Card>
         <CardContent className="grid grid-cols-2 gap-6">
           <h1 className="col-span-2 text-2xl font-medium">Chuyên mục</h1>
-          <div className="col-span-1">
+          <div className="xs:col-span-1 col-span-2">
             <Form
               ref={categoryFormRef}
               loading={isCreatingProperty || isUploadingFiles}

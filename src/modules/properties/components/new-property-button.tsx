@@ -2,6 +2,7 @@
 
 import { FilePlus2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { ComponentProps } from 'react';
 
 import { Button } from '@/base/components/ui/button';
 import { useAuthDialog } from '@/base/providers';
@@ -9,9 +10,10 @@ import { User } from '@/modules/users';
 
 interface NewPropertyButtonProps {
   user: Omit<User, 'createTimestamp' | 'updateTimestamp' | 'deleteTimestamp'> | undefined;
+  onClick?: ComponentProps<typeof Button>['onClick'];
 }
 
-export function NewPropertyButton({ user }: NewPropertyButtonProps) {
+export function NewPropertyButton({ user, onClick }: NewPropertyButtonProps) {
   const { setOpen, setMode, setVersion } = useAuthDialog();
   const router = useRouter();
 
@@ -29,7 +31,16 @@ export function NewPropertyButton({ user }: NewPropertyButtonProps) {
     <Button
       size="lg"
       className="p-7! text-xl! font-semibold"
-      onClick={!user ? handleOpenAuthDialog : handleNavigation}
+      onClick={(e) => {
+        if (!user) {
+          handleOpenAuthDialog();
+          onClick?.(e);
+          return;
+        }
+
+        handleNavigation();
+        onClick?.(e);
+      }}
     >
       <FilePlus2Icon className="size-6" />
       Đăng tin ngay

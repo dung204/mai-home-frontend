@@ -58,10 +58,16 @@ export function Footer() {
         <h3 className="text-lg font-semibold uppercase">Thuộc dự án của Hoa Mai Group</h3>
         <p>Khu Công Nghệ Cao Hòa Lạc, km 29, Đại lộ, Thăng Long, Hà Nội</p>
         <p>
-          Email: <Link href="mailto:contact@maihome.info.vn">contact@maihome.info.vn</Link>
+          Email:{' '}
+          <Link href="mailto:contact@maihome.info.vn" className="text-blue-500 underline">
+            contact@maihome.info.vn
+          </Link>
         </p>
         <p>
-          Hotline: <Link href="tel:090001005">090001005</Link>
+          Hotline:{' '}
+          <Link href="tel:0375028703" className="text-blue-500 underline">
+            037 502 8703
+          </Link>
         </p>
       </div>
     </footer>
