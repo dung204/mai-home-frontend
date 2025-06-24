@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 
@@ -34,6 +35,7 @@ export default async function RootLayout({
             <Toaster position="top-right" richColors />
           </QueryProvider>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
