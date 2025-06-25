@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,7 +21,6 @@ import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import { Form } from '@/base/components/ui/form';
 import { Skeleton } from '@/base/components/ui/skeleton';
-import { cn } from '@/base/lib';
 import { LocationForm } from '@/modules/location/components/location-form';
 import { ImagePayload, MediaUploadResponse, VideoPayload, mediaService } from '@/modules/media';
 import {
@@ -30,6 +29,9 @@ import {
   createPropertySchema,
   propertiesService,
 } from '@/modules/properties';
+
+import { AreaForm } from '../components/area-form';
+import { PricePerMonthForm } from '../components/price-per-month-form';
 
 type EditPropertyPageProps = {
   propertyId: string;
@@ -48,6 +50,8 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
   const infoFormRef = useRef<ComponentRef<typeof Form>>(null);
   const mapFormRef = useRef<ComponentRef<typeof Form>>(null);
   const imageFormRef = useRef<ComponentRef<typeof Form>>(null);
+  const pricePerMonthFormRef = useRef<ComponentRef<typeof PricePerMonthForm>>(null);
+  const areaFormRef = useRef<ComponentRef<typeof AreaForm>>(null);
   const videoFormRef = useRef<ComponentRef<typeof Form>>(null);
 
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -108,16 +112,51 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
     )();
     await infoFormRef.current?.handleSubmit(
       (data) => {
-        const { title, description, pricePerMonth, area } = data as Record<string, string>;
+        const { title, description } = data as Record<string, string>;
 
         updatedProperty = {
           ...updatedProperty,
           ...(title !== property.title && { title }),
           ...(description !== property.description && { description }),
-          ...(parseFloat(pricePerMonth) !== parseFloat(property.pricePerMonth) && {
-            pricePerMonth,
+        };
+      },
+      () => {
+        canSubmit = false;
+      },
+    )();
+    await pricePerMonthFormRef.current?.handleSubmit(
+      (data) => {
+        const { minPricePerMonth, maxPricePerMonth } = data as Record<
+          string,
+          'minPricePerMonth' | 'maxPricePerMonth'
+        >;
+
+        updatedProperty = {
+          ...updatedProperty,
+          ...(parseFloat(minPricePerMonth) !== parseFloat(property.minPricePerMonth) && {
+            minPricePerMonth,
           }),
-          ...(parseFloat(area) !== parseFloat(property.area) && { area }),
+          ...(parseFloat(maxPricePerMonth) !== parseFloat(property.maxPricePerMonth) && {
+            maxPricePerMonth,
+          }),
+        };
+      },
+      () => {
+        canSubmit = false;
+      },
+    )();
+    await areaFormRef.current?.handleSubmit(
+      (data) => {
+        const { minArea, maxArea } = data as Record<string, 'minArea' | 'maxArea'>;
+
+        updatedProperty = {
+          ...updatedProperty,
+          ...(parseFloat(minArea) !== parseFloat(property.minArea) && {
+            minArea,
+          }),
+          ...(parseFloat(maxArea) !== parseFloat(property.maxArea) && {
+            maxArea,
+          }),
         };
       },
       () => {
@@ -365,14 +404,10 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
             schema={createPropertySchema.pick({
               title: true,
               description: true,
-              pricePerMonth: true,
-              area: true,
             })}
             defaultValues={{
               title: property.title,
               description: property.description,
-              pricePerMonth: property.pricePerMonth,
-              area: property.area,
             }}
             fields={[
               {
@@ -405,59 +440,25 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
                   </>
                 ),
               },
-              {
-                name: 'pricePerMonth',
-                type: 'text',
-                label: 'Giá thuê/tháng',
-                placeholder: 'Nhập đầy đủ số dương, ví dụ 1 triệu nhập là 1000000',
-                render: ({ Label, Control, Description, Message }) => (
-                  <>
-                    <Label />
-                    <div
-                      className={cn(
-                        'border-input flex items-center rounded-md border transition-all',
-                        'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
-                        'has-[input[aria-invalid="true"]]:ring-danger/20 dark:has-[input[aria-invalid="true"]]:ring-danger/40 has-[input[aria-invalid="true"]]:border-danger',
-                      )}
-                    >
-                      <Control className="rounded-none border-0 text-base! shadow-none ring-0 focus-visible:ring-0" />
-                      <div className="flex h-full items-center border-l px-4 text-sm">
-                        VNĐ/tháng
-                      </div>
-                    </div>
-                    <Description />
-                    <Message />
-                  </>
-                ),
-              },
-              {
-                name: 'area',
-                type: 'text',
-                label: 'Diện tích',
-                placeholder: 'Nhập diện tích',
-                render: ({ Label, Control, Description, Message }) => (
-                  <>
-                    <Label />
-                    <div
-                      className={cn(
-                        'border-input flex items-center rounded-md border transition-all',
-                        'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
-                        'has-[input[aria-invalid="true"]]:ring-danger/20 dark:has-[input[aria-invalid="true"]]:ring-danger/40 has-[input[aria-invalid="true"]]:border-danger',
-                      )}
-                    >
-                      <Control className="rounded-none border-0 text-base! shadow-none ring-0 focus-visible:ring-0" />
-                      <div className="flex h-full items-center border-l px-4 text-sm">
-                        m<sup>2</sup>
-                      </div>
-                    </div>
-                    <Description />
-                    <Message />
-                  </>
-                ),
-              },
             ]}
             renderSubmitButton={() => <></>}
             onSuccessSubmit={() => {}}
+          />
+          <PricePerMonthForm
+            ref={pricePerMonthFormRef}
+            loading={isUpdatingProperty || isUploadingFiles || isDeletingFile}
+            defaultValues={{
+              minPricePerMonth: property.minPricePerMonth,
+              maxPricePerMonth: property.maxPricePerMonth,
+            }}
+          />
+          <AreaForm
+            ref={areaFormRef}
+            loading={isUpdatingProperty || isUploadingFiles || isDeletingFile}
+            defaultValues={{
+              minArea: property.minArea,
+              maxArea: property.maxArea,
+            }}
           />
         </CardContent>
       </Card>
@@ -700,6 +701,7 @@ function SuccessAlertDialog({
   ...props
 }: ComponentProps<typeof AlertDialog> & { propertyId: string | undefined }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return (
     <AlertDialog {...props}>
@@ -708,8 +710,17 @@ function SuccessAlertDialog({
           <AlertDialogTitle>Chỉnh sửa bài thành công</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => router.refresh()}>Đóng</AlertDialogCancel>
-          <AlertDialogAction onClick={() => router.push(`/property/${propertyId}`)}>
+          <AlertDialogCancel
+            onClick={() => queryClient.invalidateQueries({ queryKey: ['property', propertyId] })}
+          >
+            Đóng
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              await queryClient.invalidateQueries({ queryKey: ['property', propertyId] });
+              router.push(`/property/${propertyId}`);
+            }}
+          >
             Đi đến bài đăng
           </AlertDialogAction>
         </AlertDialogFooter>

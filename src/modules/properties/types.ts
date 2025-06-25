@@ -31,8 +31,10 @@ export interface Property extends BaseEntity {
   address: string;
   latitude: string;
   longitude: string;
-  pricePerMonth: string;
-  area: string;
+  minPricePerMonth: string;
+  maxPricePerMonth: string;
+  minArea: string;
+  maxArea: string;
   images: string[];
   videos: string[];
 }
@@ -46,10 +48,16 @@ export const createPropertySchema = z
     description: z.string().min(50, { message: 'Mô tả phải có tối thiểu 50 ký tự' }).max(5000, {
       message: 'Mô tả không được vượt quá 5000 ký tự',
     }),
-    pricePerMonth: z.string().refine((value) => parseInt(value) > 0, {
+    minPricePerMonth: z.string().refine((value) => parseInt(value) > 0, {
       message: 'Giá thuê/tháng phải là số dương',
     }),
-    area: z.string().refine((value) => parseInt(value) > 0, {
+    maxPricePerMonth: z.string().refine((value) => parseInt(value) > 0, {
+      message: 'Giá thuê/tháng phải là số dương',
+    }),
+    minArea: z.string().refine((value) => parseInt(value) > 0, {
+      message: 'Diện tích phải là số dương',
+    }),
+    maxArea: z.string().refine((value) => parseInt(value) > 0, {
       message: 'Diện tích phải là số dương',
     }),
     category: z.enum(

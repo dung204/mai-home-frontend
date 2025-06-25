@@ -20,6 +20,7 @@ import { Skeleton } from '@/base/components/ui/skeleton';
 import { withTooltip } from '@/base/components/ui/tooltip';
 
 import { Property } from '../types';
+import { PropertiesUtils } from '../utils/properties.utils';
 
 const PriceIcon = withTooltip(BadgeDollarSignIcon);
 const AreaIcon = withTooltip(LandPlotIcon);
@@ -80,11 +81,8 @@ export function HorizontalPropertyCard({ property }: PropertyCardProps) {
                 tooltipContentProps={{ side: 'left' }}
               />
               :
-              <span>
-                {new Intl.NumberFormat('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                }).format(Number(property.pricePerMonth))}
+              <span className="line-clamp-1" title={PropertiesUtils.getPricePerMonth(property)}>
+                {PropertiesUtils.getPricePerMonth(property)}
               </span>
             </div>
             <div className="flex items-center gap-1">
@@ -94,8 +92,8 @@ export function HorizontalPropertyCard({ property }: PropertyCardProps) {
                 tooltipContentProps={{ side: 'left' }}
               />
               :
-              <span>
-                {property.area} m<sup>2</sup>
+              <span title={PropertiesUtils.getArea(property)} className="line-clamp-1">
+                {PropertiesUtils.getArea(property)}
               </span>
             </div>
             <div className="flex items-center gap-1">
@@ -105,12 +103,8 @@ export function HorizontalPropertyCard({ property }: PropertyCardProps) {
                 tooltipContentProps={{ side: 'left' }}
               />
               :
-              <span
-                className="line-clamp-1"
-                title={`${property.address}, ${property.ward.name}, ${property.district.name}, ${property.city.name}`}
-              >
-                {property.address}, {property.ward.name}, {property.district.name},{' '}
-                {property.city.name}
+              <span className="line-clamp-1" title={PropertiesUtils.getFullAddress(property)}>
+                {PropertiesUtils.getFullAddress(property)}
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -121,15 +115,7 @@ export function HorizontalPropertyCard({ property }: PropertyCardProps) {
                 <div className="flex w-full flex-col gap-1">
                   <span className="font-semibold">{property.owner.displayName}</span>
                   <div className="text-sm">
-                    Đăng vào{' '}
-                    {new Intl.RelativeTimeFormat('vi-VN', { numeric: 'auto' })
-                      .format(
-                        Math.round(
-                          (new Date(property.createTimestamp).getTime() - Date.now()) / 86400000,
-                        ),
-                        'days',
-                      )
-                      .toLocaleLowerCase('vi-VN')}
+                    Đăng vào {PropertiesUtils.getCreateTimestampInDaysOffset(property)}
                   </div>
                 </div>
               </div>
@@ -261,40 +247,34 @@ export function VerticalPropertyCard({
         <div className="flex items-center gap-1">
           <PriceIcon
             className="text-muted-foreground"
-            tooltip="Price for 1 month"
+            tooltip="Giá thuê 1 tháng"
             tooltipContentProps={{ side: 'left' }}
           />
           :
-          <span>
-            {new Intl.NumberFormat('vi-VN', {
-              style: 'currency',
-              currency: 'VND',
-            }).format(Number(property.pricePerMonth))}
+          <span title={PropertiesUtils.getPricePerMonth(property)} className="line-clamp-1">
+            {PropertiesUtils.getPricePerMonth(property)}
           </span>
         </div>
         <div className="flex items-center gap-1">
           <AreaIcon
             className="text-muted-foreground"
-            tooltip="Area"
+            tooltip="Diện tích"
             tooltipContentProps={{ side: 'left' }}
           />
           :
-          <span>
-            {property.area} m<sup>2</sup>
+          <span className="line-clamp-1" title={PropertiesUtils.getArea(property)}>
+            {PropertiesUtils.getArea(property)}
           </span>
         </div>
         <div className="flex items-center gap-1">
           <LocationIcon
             className="text-muted-foreground size-6"
-            tooltip="Location"
+            tooltip="Vị trí"
             tooltipContentProps={{ side: 'left' }}
           />
           :
-          <span
-            className="line-clamp-1"
-            title={`${property.address}, ${property.ward.name}, ${property.district.name}, ${property.city.name}`}
-          >
-            {property.address}, {property.ward.name}, {property.district.name}, {property.city.name}
+          <span className="line-clamp-1" title={PropertiesUtils.getFullAddress(property)}>
+            {PropertiesUtils.getFullAddress(property)}
           </span>
         </div>
         {withOwner && (

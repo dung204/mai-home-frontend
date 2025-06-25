@@ -17,10 +17,11 @@ import {
 import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import { Form } from '@/base/components/ui/form';
-import { cn } from '@/base/lib';
 import { LocationForm } from '@/modules/location/components/location-form';
 import { ImagePayload, MediaUploadResponse, VideoPayload, mediaService } from '@/modules/media';
 
+import { AreaForm } from '../components/area-form';
+import { PricePerMonthForm } from '../components/price-per-month-form';
 import { propertiesService } from '../services/properties.service';
 import { CreatePropertySchema, PropertyCategory, createPropertySchema } from '../types';
 
@@ -31,6 +32,8 @@ export function NewPropertyPage() {
   const mapFormRef = useRef<ComponentRef<typeof Form>>(null);
   const imageFormRef = useRef<ComponentRef<typeof Form>>(null);
   const videoFormRef = useRef<ComponentRef<typeof Form>>(null);
+  const pricePerMonthFormRef = useRef<ComponentRef<typeof PricePerMonthForm>>(null);
+  const areaFormRef = useRef<ComponentRef<typeof AreaForm>>(null);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showFailedDialog, setShowFailedDialog] = useState(false);
   const [propertyId] = useState<string>(crypto.randomUUID());
@@ -79,6 +82,52 @@ export function NewPropertyPage() {
         property = {
           ...property,
           ...(data as Record<string, string>),
+        };
+      },
+      () => {
+        canSubmit = false;
+      },
+    )();
+    await pricePerMonthFormRef.current?.handleSubmit(
+      (data) => {
+        const { minPricePerMonth, maxPricePerMonth } = data as Record<string, string>;
+
+        if (!maxPricePerMonth) {
+          property = {
+            ...property,
+            minPricePerMonth: minPricePerMonth.toString(),
+            maxPricePerMonth: minPricePerMonth.toString(),
+          };
+          return;
+        }
+
+        property = {
+          ...property,
+          minPricePerMonth: minPricePerMonth.toString(),
+          maxPricePerMonth: maxPricePerMonth.toString(),
+        };
+      },
+      () => {
+        canSubmit = false;
+      },
+    )();
+    await areaFormRef.current?.handleSubmit(
+      (data) => {
+        const { minArea, maxArea } = data as Record<string, string>;
+
+        if (!maxArea) {
+          property = {
+            ...property,
+            minArea: minArea.toString(),
+            maxArea: minArea.toString(),
+          };
+          return;
+        }
+
+        property = {
+          ...property,
+          minArea: minArea.toString(),
+          maxArea: maxArea.toString(),
         };
       },
       () => {
@@ -224,8 +273,6 @@ export function NewPropertyPage() {
             schema={createPropertySchema.pick({
               title: true,
               description: true,
-              pricePerMonth: true,
-              area: true,
             })}
             fields={[
               {
@@ -258,60 +305,15 @@ export function NewPropertyPage() {
                   </>
                 ),
               },
-              {
-                name: 'pricePerMonth',
-                type: 'text',
-                label: 'Giá thuê/tháng',
-                placeholder: 'Nhập đầy đủ số dương, ví dụ 1 triệu nhập là 1000000',
-                render: ({ Label, Control, Description, Message }) => (
-                  <>
-                    <Label />
-                    <div
-                      className={cn(
-                        'border-input flex items-center rounded-md border transition-all',
-                        'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
-                        'has-[input[aria-invalid="true"]]:ring-danger/20 dark:has-[input[aria-invalid="true"]]:ring-danger/40 has-[input[aria-invalid="true"]]:border-danger',
-                      )}
-                    >
-                      <Control className="rounded-none border-0 text-base! shadow-none ring-0 focus-visible:ring-0" />
-                      <div className="flex h-full items-center border-l px-4 text-sm">
-                        VNĐ/tháng
-                      </div>
-                    </div>
-                    <Description />
-                    <Message />
-                  </>
-                ),
-              },
-              {
-                name: 'area',
-                type: 'text',
-                label: 'Diện tích',
-                placeholder: 'Nhập diện tích',
-                render: ({ Label, Control, Description, Message }) => (
-                  <>
-                    <Label />
-                    <div
-                      className={cn(
-                        'border-input flex items-center rounded-md border transition-all',
-                        'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
-                        'has-[input[aria-invalid="true"]]:ring-danger/20 dark:has-[input[aria-invalid="true"]]:ring-danger/40 has-[input[aria-invalid="true"]]:border-danger',
-                      )}
-                    >
-                      <Control className="rounded-none border-0 text-base! shadow-none ring-0 focus-visible:ring-0" />
-                      <div className="flex h-full items-center border-l px-4 text-sm">
-                        m<sup>2</sup>
-                      </div>
-                    </div>
-                    <Description />
-                    <Message />
-                  </>
-                ),
-              },
             ]}
             renderSubmitButton={() => <></>}
             onSuccessSubmit={() => {}}
           />
+          <PricePerMonthForm
+            ref={pricePerMonthFormRef}
+            loading={isCreatingProperty || isUploadingFiles}
+          />
+          <AreaForm ref={areaFormRef} loading={isCreatingProperty || isUploadingFiles} />
         </CardContent>
       </Card>
       <Card>

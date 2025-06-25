@@ -18,6 +18,7 @@ import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import { Separator } from '@/base/components/ui/separator';
 import { Skeleton } from '@/base/components/ui/skeleton';
+import { StringUtils } from '@/base/utils';
 import { UserAvatar } from '@/modules/users';
 
 import { HighlightedNews } from '../components/highlighted-news';
@@ -32,6 +33,7 @@ import {
 } from '../components/recommended-properties';
 import { propertiesService } from '../services/properties.service';
 import { PropertyCategory, propertyCategories } from '../types';
+import { PropertiesUtils } from '../utils/properties.utils';
 
 type PropertyDetailsPageProps = {
   id: string;
@@ -102,16 +104,12 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
                   <CardContent className="flex flex-col gap-10">
                     <h1 className="flex flex-col gap-1.5 text-xl font-medium">{property.title}</h1>
                     <div className="text-xl font-medium">
-                      {new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND',
-                      }).format(parseInt(property.pricePerMonth ?? '0'))}
-                      /tháng
+                      {PropertiesUtils.getPricePerMonth(property)}
                     </div>
                     <div className="xs:gap-x-6 xs:grid-cols-5 grid grid-cols-2 gap-y-6">
                       <div className="xs:col-span-2 col-span-1 sm:col-span-1">Diện tích:</div>
                       <div className="xs:col-span-3 col-span-1 sm:col-span-4">
-                        {parseInt(property.area ?? '0')}m<sup>2</sup>
+                        {PropertiesUtils.getArea(property)}
                       </div>
                       <div className="xs:col-span-2 col-span-1 sm:col-span-1">Tỉnh/Thành phố:</div>
                       <div className="xs:col-span-3 col-span-1 sm:col-span-4">
@@ -131,11 +129,7 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
                       </div>
                       <div className="xs:col-span-2 col-span-1 sm:col-span-1">Ngày đăng:</div>
                       <div className="xs:col-span-3 col-span-1 sm:col-span-4">
-                        {new Intl.DateTimeFormat('vi-VN', {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                        }).format(new Date(property.createTimestamp ?? ''))}
+                        {StringUtils.formatDate(property.createTimestamp)}
                       </div>
                     </div>
                     <Separator />
@@ -157,11 +151,7 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
                           </div>
                           <div className="max-xs:justify-center flex items-center gap-1 text-xs">
                             Tham gia từ ngày{' '}
-                            {new Intl.DateTimeFormat('vi-VN', {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                            }).format(new Date(property.owner.createTimestamp ?? ''))}
+                            {StringUtils.formatDate(property.owner.createTimestamp ?? '')}
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -200,11 +190,7 @@ export function PropertyDetailsPage({ id }: PropertyDetailsPageProps) {
                     <div className="flex items-center gap-1 text-xs">
                       <span>
                         Tham gia từ ngày{' '}
-                        {new Intl.DateTimeFormat('vi-VN', {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                        }).format(new Date(property.owner.createTimestamp ?? ''))}
+                        {StringUtils.formatDate(property.owner.createTimestamp ?? '')}
                       </span>
                     </div>
                   </div>
