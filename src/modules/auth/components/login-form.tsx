@@ -15,9 +15,10 @@ import { authService } from '../services/auth.service';
 interface LoginFormProps {
   onLoginSuccess?: () => void;
   onForgotPassword?: () => void;
+  defaultValues?: Record<string, unknown>;
 }
 
-export function LoginForm({ onLoginSuccess, onForgotPassword }: LoginFormProps) {
+export function LoginForm({ onLoginSuccess, onForgotPassword, defaultValues }: LoginFormProps) {
   const {
     mutateAsync: triggerLogin,
     isPending,
@@ -53,6 +54,7 @@ export function LoginForm({ onLoginSuccess, onForgotPassword }: LoginFormProps) 
       )}
       <Form
         className="flex flex-col gap-4"
+        defaultValues={defaultValues}
         loading={isPending}
         schema={loginSchema}
         fields={[

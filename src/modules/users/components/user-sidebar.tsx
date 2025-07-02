@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from '@/base/components/ui/avatar';
 import { Separator } from '@/base/components/ui/separator';
 import { Sheet, SheetContent, SheetTrigger } from '@/base/components/ui/sheet';
 import { Skeleton } from '@/base/components/ui/skeleton';
+import { cn } from '@/base/lib';
 
 import { userSchema } from '../types';
 import { UserAvatar } from './user-avatar';
@@ -38,8 +39,20 @@ export async function UserSidebar() {
               <div className="flex items-center gap-4">
                 <UserAvatar user={user} className="size-14" />
                 <div className="flex flex-col gap-1">
-                  <span className="text-base font-semibold">{user?.displayName}</span>
-                  <span className="text-muted-foreground text-sm">{user?.phone}</span>
+                  <span
+                    className={cn('text-base font-semibold', {
+                      'text-danger': !user?.displayName,
+                    })}
+                  >
+                    {user?.displayName ?? 'Chưa có tên hiển thị'}
+                  </span>
+                  <span
+                    className={cn('text-muted-foreground text-sm', {
+                      'text-danger': !user?.phone,
+                    })}
+                  >
+                    {user?.phone ?? 'Chưa có số điện thoại'}
+                  </span>
                 </div>
               </div>
               <UserSidebarNav isMobile />
@@ -67,8 +80,20 @@ export async function UserSidebar() {
           <div className="flex items-center gap-4">
             <UserAvatar user={user} className="size-14" />
             <div className="flex flex-col gap-1">
-              <span className="text-base font-semibold">{user?.displayName}</span>
-              <span className="text-muted-foreground text-sm">{user?.phone}</span>
+              <span
+                className={cn('text-base font-semibold', {
+                  'text-danger': !user?.displayName,
+                })}
+              >
+                {user?.displayName ?? 'Chưa có tên hiển thị'}
+              </span>
+              <span
+                className={cn('text-muted-foreground text-sm', {
+                  'text-danger': !user?.phone,
+                })}
+              >
+                {user?.phone ?? 'Chưa có số điện thoại'}
+              </span>
             </div>
           </div>
           <UserSidebarNav />

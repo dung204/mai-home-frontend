@@ -4,5 +4,6 @@ export * from './components/user-header';
 export * from './components/user-sidebar';
 export * from './components/account-management-layout';
 export * from './components/user-avatar';
+export * from './components/user-avatar-uploader';
 export * from './pages/update-profile.page';
 export * from './pages/change-phone.page';

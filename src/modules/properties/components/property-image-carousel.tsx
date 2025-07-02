@@ -20,6 +20,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/base/components/ui/carousel';
+import { envClient } from '@/base/config/env-client.config';
 import { cn } from '@/base/lib';
 
 import { Property } from '../types';
@@ -62,7 +63,11 @@ export function PropertyImageCarousel({
               className={cn('relative w-full', classNames.item)}
               key={`property-video-${crypto.randomUUID()}`}
             >
-              <video src={video} controls className="size-full object-contain" />
+              <video
+                src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${video}`}
+                controls
+                className="size-full object-contain"
+              />
             </CarouselItem>
           ))}
           {property.images.map((image) => (
@@ -71,7 +76,7 @@ export function PropertyImageCarousel({
               key={`property-image-${crypto.randomUUID()}`}
             >
               <Image
-                src={image ?? '/placeholder-600x400.svg'}
+                src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${image}`}
                 alt=""
                 className="object-contain"
                 fill
@@ -126,7 +131,7 @@ function Thumbnails({ property, ref, onThumbnailClick }: ThumbnailsProps) {
           </div>
           <video
             preload="metadata"
-            src={video}
+            src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${video}`}
             className="size-full object-contain object-center"
             muted
             controls={false}
@@ -142,7 +147,7 @@ function Thumbnails({ property, ref, onThumbnailClick }: ThumbnailsProps) {
           onClick={() => onThumbnailClick?.(index + property.videos.length)}
         >
           <Image
-            src={image ?? '/placeholder-600x400.svg'}
+            src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${image}`}
             alt=""
             className="object-contain object-center"
             fill

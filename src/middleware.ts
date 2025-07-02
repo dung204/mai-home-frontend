@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { LoginSuccessResponse, RefreshTokenSuccessResponse } from '@/modules/auth/types';
 
 import { envServer } from './base/config/env-server.config';
+import { RouteUtils } from './base/utils';
 import { userSchema } from './modules/users/types';
 
 export const config = {
@@ -25,7 +26,7 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
   const redirectUrl = request.nextUrl.clone();
-  const isPrivateRoute = pathname.startsWith('/user');
+  const isPrivateRoute = RouteUtils.isPrivateRoute(pathname);
 
   try {
     if (!accessToken && !isPrivateRoute) {

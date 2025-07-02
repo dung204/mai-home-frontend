@@ -12,9 +12,8 @@ export type VideoPayload = {
 export type MediaUploadResponse = {
   data: [
     {
-      originalName: string;
-      name: string;
       url: string;
+      fileName: string;
     },
   ];
   metadata: {

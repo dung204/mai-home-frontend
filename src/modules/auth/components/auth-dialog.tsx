@@ -3,6 +3,7 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
 
 import { Button } from '@/base/components/ui/button';
@@ -10,19 +11,35 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/base/compone
 import { Drawer, DrawerClose, DrawerContent } from '@/base/components/ui/drawer';
 import { useIsMobile } from '@/base/hooks';
 
+import { AuthUtils } from '../utils/auth.utils';
 import { ForgotPasswordForm } from './forgot-password-form';
 import { LoginForm } from './login-form';
 import { RegisterForm } from './register-form';
 
 interface AuthDialogProps extends ComponentProps<typeof Dialog> {
-  initialMode?: 'login' | 'register' | 'forgot-password';
+  mode?: 'login' | 'register' | 'forgot-password';
+  onModeChange?: (mode: 'login' | 'register') => void;
+  step?: number;
+  onStepChange?: (step: number) => void;
+  defaultValues?: Record<string, unknown>;
+  onSuccess?: () => void;
 }
 
-export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
+export function AuthDialog({
+  mode: initialMode,
+  step: initialStep,
+  onStepChange,
+  onModeChange,
+  defaultValues,
+  onSuccess,
+  ...props
+}: AuthDialogProps) {
+  const router = useRouter();
   const isMobile = useIsMobile();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>(
     initialMode ?? 'login',
   );
+  const [step, setStep] = useState(initialStep ?? 1);
 
   if (isMobile) {
     return (
@@ -31,7 +48,7 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
           <div className="flex grow flex-col justify-between p-8 pb-4">
             <div className="flex w-full flex-col">
               <p className="text-xl font-medium">Xin chào bạn</p>
-              <h2 className="text-2xl font-bold capitalize">{getTitle(mode)}</h2>
+              <h2 className="text-2xl font-bold capitalize">{getTitle(mode, step)}</h2>
               <section className="mt-6 mb-2">
                 {(() => {
                   switch (mode) {
@@ -40,18 +57,29 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
                         <LoginForm
                           onForgotPassword={() => setMode('forgot-password')}
                           onLoginSuccess={() => {
-                            props.onOpenChange?.(false);
-                            window.location.reload();
+                            onSuccess?.();
+                            router.replace(
+                              new URL(window.location.pathname, window.location.origin).href,
+                            );
                           }}
+                          defaultValues={defaultValues}
                         />
                       );
                     case 'register':
                       return (
                         <RegisterForm
                           onRegisterSuccess={() => {
-                            props.onOpenChange?.(false);
-                            window.location.reload();
+                            onSuccess?.();
+                            router.replace(
+                              new URL(window.location.pathname, window.location.origin).href,
+                            );
                           }}
+                          step={step}
+                          onStepChange={(step) => {
+                            setStep(step);
+                            onStepChange?.(step);
+                          }}
+                          defaultValues={defaultValues}
                         />
                       );
                     case 'forgot-password':
@@ -98,7 +126,10 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
                   Bạn chưa có tài khoản?{' '}
                   <span
                     className="text-primary cursor-pointer hover:underline"
-                    onClick={() => setMode('register')}
+                    onClick={() => {
+                      setMode('register');
+                      onModeChange?.('register');
+                    }}
                   >
                     Đăng ký
                   </span>
@@ -108,7 +139,10 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
                   Bạn đã có tài khoản?{' '}
                   <span
                     className="text-primary cursor-pointer hover:underline"
-                    onClick={() => setMode('login')}
+                    onClick={() => {
+                      setMode('login');
+                      onModeChange?.('login');
+                    }}
                   >
                     Đăng nhập
                   </span>
@@ -129,7 +163,7 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
       <DialogContent className="max-w-4xl! overflow-hidden p-0">
         <VisuallyHidden>
           <DialogHeader>
-            <DialogTitle>{getTitle(mode)}</DialogTitle>
+            <DialogTitle>{getTitle(mode, step)}</DialogTitle>
           </DialogHeader>
         </VisuallyHidden>
         <div className="flex">
@@ -137,7 +171,7 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
           <div className="flex grow flex-col justify-between p-8">
             <div className="flex w-full flex-col">
               <p className="text-xl font-medium">Xin chào bạn</p>
-              <h2 className="text-2xl font-bold capitalize">{getTitle(mode)}</h2>
+              <h2 className="text-2xl font-bold capitalize">{getTitle(mode, step)}</h2>
               <section className="mt-6 mb-2">
                 {(() => {
                   switch (mode) {
@@ -146,18 +180,29 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
                         <LoginForm
                           onForgotPassword={() => setMode('forgot-password')}
                           onLoginSuccess={() => {
-                            props.onOpenChange?.(false);
-                            window.location.reload();
+                            onSuccess?.();
+                            window.location.replace(
+                              new URL(window.location.pathname, window.location.origin).href,
+                            );
                           }}
+                          defaultValues={defaultValues}
                         />
                       );
                     case 'register':
                       return (
                         <RegisterForm
                           onRegisterSuccess={() => {
-                            props.onOpenChange?.(false);
-                            window.location.reload();
+                            onSuccess?.();
+                            window.location.replace(
+                              new URL(window.location.pathname, window.location.origin).href,
+                            );
                           }}
+                          step={step}
+                          onStepChange={(step) => {
+                            setStep(step);
+                            onStepChange?.(step);
+                          }}
+                          defaultValues={defaultValues}
                         />
                       );
                     case 'forgot-password':
@@ -173,7 +218,12 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
                   <p className="text-muted-foreground text-lg font-medium">Hoặc</p>
                   <div className="border-border w-full border"></div>
                 </div>
-                <Button variant="outline" size="lg" className="gap-4 py-8 text-base">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="gap-4 py-8 text-base"
+                  onClick={() => AuthUtils.redirectToGoogleLoginPage()}
+                >
                   <Image src="/google-logo.svg" alt="Google logo" width={34} height={34} />
                   Đăng nhập với Google
                 </Button>
@@ -204,7 +254,10 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
                   Bạn chưa có tài khoản?{' '}
                   <span
                     className="text-primary cursor-pointer hover:underline"
-                    onClick={() => setMode('register')}
+                    onClick={() => {
+                      setMode('register');
+                      onModeChange?.('register');
+                    }}
                   >
                     Đăng ký
                   </span>
@@ -214,7 +267,10 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
                   Bạn đã có tài khoản?{' '}
                   <span
                     className="text-primary cursor-pointer hover:underline"
-                    onClick={() => setMode('login')}
+                    onClick={() => {
+                      setMode('login');
+                      onModeChange?.('login');
+                    }}
                   >
                     Đăng nhập
                   </span>
@@ -228,12 +284,15 @@ export function AuthDialog({ initialMode, ...props }: AuthDialogProps) {
   );
 }
 
-function getTitle(mode: 'login' | 'register' | 'forgot-password') {
+function getTitle(mode: 'login' | 'register' | 'forgot-password', step: number) {
   switch (mode) {
     case 'login':
       return 'Đăng nhập để tiếp tục';
     case 'register':
-      return 'Đăng ký tài khoản mới';
+      if (step === 1) {
+        return 'Đăng ký tài khoản mới';
+      }
+      return 'Hoàn tất thông tin để tiếp tục';
     case 'forgot-password':
       return 'Khôi phục mật khẩu';
     default:

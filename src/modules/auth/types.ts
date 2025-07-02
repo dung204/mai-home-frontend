@@ -50,11 +50,11 @@ export type RegisterSchema = LoginSchema;
 
 export const changePasswordSchema = z
   .object({
-    password: z.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự'),
+    password: z.string().optional(),
     newPassword: z.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự'),
     confirmPassword: z.string().nonempty('Mật khẩu xác nhận không được để trống'),
   })
-  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+  .refine(({ newPassword, confirmPassword }) => newPassword === confirmPassword, {
     message: 'Mật khẩu xác nhận không khớp với mật khẩu mới',
     path: ['confirmPassword'],
   });
@@ -75,3 +75,8 @@ export const verifyOtpSchema = getOtpSchema.extend({
 });
 
 export type VerifyOtpSchema = z.infer<typeof verifyOtpSchema>;
+
+export enum OAuthAction {
+  AUTHENTICATE = 'authenticate',
+  LINK = 'link',
+}

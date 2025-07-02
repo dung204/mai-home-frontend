@@ -40,6 +40,7 @@ import { TimePicker } from '@/base/components/ui/time-picker';
 import { TimeRangePicker } from '@/base/components/ui/time-range-picker';
 import { cn } from '@/base/lib';
 import { withProps } from '@/base/utils';
+import { UserAvatarUploader } from '@/modules/users';
 
 import { AsyncSelect, AsyncSelectProps } from './async-select';
 import { ImageUploader } from './image-uploader';
@@ -72,6 +73,8 @@ type FormFieldSpec<TFieldValues extends FieldValues = FieldValues> = {
   label?: string;
   description?: string;
   disabled?: boolean;
+  className?: string;
+  required?: boolean;
 } & (
   | {
       type: 'text';
@@ -384,6 +387,10 @@ type FormFieldSpec<TFieldValues extends FieldValues = FieldValues> = {
       type: 'video';
       render?: FormFieldRenderFn<{ className?: string }>;
     } & Omit<React.ComponentProps<typeof VideoUploader>, 'videos' | 'onVideosChange'>)
+  | ({
+      type: 'avatar';
+      render?: FormFieldRenderFn<{ className?: string }>;
+    } & Omit<React.ComponentProps<typeof UserAvatarUploader>, 'image' | 'onImageChange'>)
 );
 
 interface FormProps<TFieldValues extends FieldValues, TTransformedValues> {
@@ -445,10 +452,12 @@ function Form<TFieldValues extends FieldValues, TTransformedValues>({
 
           return (
             <FormField key={formField.name} name={formField.name}>
-              <FormItem i18nNamespace={i18nNamespace}>
+              <FormItem i18nNamespace={i18nNamespace} className={formField.className}>
                 {!formField.render ? (
                   <>
-                    <Label required={isFieldRequired}>{formField.label}</Label>
+                    <Label required={formField.required ?? isFieldRequired}>
+                      {formField.label}
+                    </Label>
                     <Control formField={formField} disabled={loading || formField.disabled} />
 
                     {(t.has(`fields.${formField.name}.description` as Parameters<typeof t>[0]) ||
@@ -458,7 +467,7 @@ function Form<TFieldValues extends FieldValues, TTransformedValues>({
                 ) : (
                   formField.render({
                     Label: withProps(Label, {
-                      required: isFieldRequired,
+                      required: formField.required ?? isFieldRequired,
                       children: formField.label,
                     }),
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -551,6 +560,9 @@ function getFormControl(formField: FormFieldSpec) {
 
     case 'video':
       return VideoFormControl;
+
+    case 'avatar':
+      return UserAvatarFormControl;
   }
 }
 
@@ -1118,6 +1130,31 @@ function VideoFormControl({
       indexesToDelete={formField.indexesToDelete}
       onVideosChange={onChange}
       onIndexesToDeleteChange={formField.onIndexesToDeleteChange}
+    />
+  );
+}
+
+function UserAvatarFormControl({
+  className,
+  formField,
+}: {
+  className?: string;
+  formField: Extract<FormFieldSpec, { type: 'avatar' }>;
+}) {
+  const form = useFormContext();
+  const {
+    field: { value: image, onChange },
+  } = useController({
+    control: form.control,
+    name: formField.name,
+  });
+
+  return (
+    <UserAvatarUploader
+      user={formField.user}
+      className={className}
+      image={image}
+      onImageChange={onChange}
     />
   );
 }

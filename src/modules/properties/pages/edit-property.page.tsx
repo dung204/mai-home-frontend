@@ -21,6 +21,7 @@ import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import { Form } from '@/base/components/ui/form';
 import { Skeleton } from '@/base/components/ui/skeleton';
+import { envClient } from '@/base/config/env-client.config';
 import { LocationForm } from '@/modules/location/components/location-form';
 import { ImagePayload, MediaUploadResponse, VideoPayload, mediaService } from '@/modules/media';
 import {
@@ -64,7 +65,7 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
   });
 
   const { mutateAsync: triggerDeleteFile, isPending: isDeletingFile } = useMutation({
-    mutationFn: (payload: { name: string; folder?: string }) => mediaService.deleteFile(payload),
+    mutationFn: (payload: { name: string }) => mediaService.deleteFile(payload),
   });
 
   const { mutate: triggerUpdateProperty, isPending: isUpdatingProperty } = useMutation({
@@ -231,47 +232,52 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
           ?.getValues('images')
           .filter((image: ImagePayload) => image.file !== null)
           .map((image: ImagePayload) => image.file) as File[]) || [];
+
       const videoFilesToUpload =
         (videoFormRef.current
           ?.getValues('videos')
           .filter((video: VideoPayload) => video.file !== null)
           .map((video: VideoPayload) => video.file) as File[]) || [];
+
       const imageFilesToDelete = imageIndexesToDelete.map((index) => ({
-        folder: `images/properties/${propertyId}`,
-        name:
-          imageFormRef.current
-            ?.getValues('images')
-            [index].previewUrl.split('/')
-            .pop()
-            ?.split('.')[0] || '',
+        name: imageFormRef.current
+          ?.getValues('images')
+          [index].previewUrl.replace(envClient.NEXT_PUBLIC_ASSETS_URL, ''),
       }));
+
       const videoFilesToDelete = videoIndexesToDelete.map((index) => ({
-        folder: `videos/properties/${propertyId}`,
-        name:
-          videoFormRef.current
-            ?.getValues('videos')
-            [index].previewUrl.split('/')
-            .pop()
-            ?.split('.')[0] || '',
+        name: videoFormRef.current
+          ?.getValues('videos')
+          [index].previewUrl.replace(envClient.NEXT_PUBLIC_ASSETS_URL, ''),
       }));
+
       const imageFilesToKeep = imageFormRef.current
         ?.getValues('images')
         .filter(
           (image: ImagePayload, index: number) =>
             image.file === null && !imageIndexesToDelete.includes(index),
         )
-        .map((image: ImagePayload) => image.previewUrl);
+        .map((image: ImagePayload) =>
+          image.previewUrl.replace(envClient.NEXT_PUBLIC_ASSETS_URL, ''),
+        );
+
       const videoFilesToKeep = videoFormRef.current
         ?.getValues('videos')
         .filter(
           (video: VideoPayload, index: number) =>
             video.file === null && !videoIndexesToDelete.includes(index),
         )
-        .map((video: VideoPayload) => video.previewUrl);
+        .map((video: VideoPayload) =>
+          video.previewUrl.replace(envClient.NEXT_PUBLIC_ASSETS_URL, ''),
+        );
 
       if (imageFilesToDelete.length > 0) {
         try {
           await Promise.all(imageFilesToDelete.map((file) => triggerDeleteFile(file)));
+          updatedProperty = {
+            ...updatedProperty,
+            images: imageFilesToKeep.join(','),
+          };
         } catch (_err) {
           setShowFailedDialog(true);
           return;
@@ -281,6 +287,10 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
       if (videoFilesToDelete.length > 0) {
         try {
           await Promise.all(videoFilesToDelete.map((file) => triggerDeleteFile(file)));
+          updatedProperty = {
+            ...updatedProperty,
+            videos: videoFilesToKeep.join(','),
+          };
         } catch (_err) {
           setShowFailedDialog(true);
           return;
@@ -293,7 +303,7 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
       if (imageFilesToUpload.length > 0) {
         try {
           imageUploadResponse = await triggerUploadFiles({
-            folder: `images/properties/${propertyId}`,
+            folder: `properties/${propertyId}/images`,
             files: imageFilesToUpload,
           });
         } catch (_err) {
@@ -308,16 +318,17 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
 
         updatedProperty = {
           ...updatedProperty,
-          images: [...imageFilesToKeep, ...imageUploadResponse.data.map((image) => image.url)].join(
-            ',',
-          ),
+          images: [
+            ...imageFilesToKeep,
+            ...imageUploadResponse.data.map((image) => image.fileName),
+          ].join(','),
         };
       }
 
       if (videoFilesToUpload.length > 0) {
         try {
           videoUploadResponse = await triggerUploadFiles({
-            folder: `videos/properties/${propertyId}`,
+            folder: `properties/${propertyId}/videos`,
             files: videoFilesToUpload,
           });
         } catch (_err) {
@@ -332,9 +343,10 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
 
         updatedProperty = {
           ...updatedProperty,
-          videos: [...videoFilesToKeep, ...videoUploadResponse.data.map((video) => video.url)].join(
-            ',',
-          ),
+          videos: [
+            ...videoFilesToKeep,
+            ...videoUploadResponse.data.map((video) => video.fileName),
+          ].join(','),
         };
       }
 
@@ -530,7 +542,7 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
             defaultValues={{
               images: property.images.map((imageUrl) => ({
                 file: null,
-                previewUrl: imageUrl,
+                previewUrl: `${envClient.NEXT_PUBLIC_ASSETS_URL}${imageUrl}`,
               })),
             }}
             fields={[
@@ -573,7 +585,7 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
             defaultValues={{
               videos: property.videos.map((videoUrl) => ({
                 file: null,
-                previewUrl: videoUrl,
+                previewUrl: `${envClient.NEXT_PUBLIC_ASSETS_URL}${videoUrl}`,
               })),
             }}
             fields={[
@@ -604,7 +616,7 @@ export function EditPropertyPage({ propertyId }: EditPropertyPageProps) {
           onClick={handleSubmit}
           loading={isUpdatingProperty || isUploadingFiles || isDeletingFile}
         >
-          Đăng tin
+          Lưu thay đổi
         </Button>
       </div>
       <SuccessAlertDialog

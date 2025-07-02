@@ -1,8 +1,10 @@
 import { HttpClient } from '@/base/lib';
 import {
+  ChangePasswordSchema,
   GetOtpSchema,
   LoginSchema,
   LoginSuccessResponse,
+  OAuthAction,
   VerifyOtpSchema,
 } from '@/modules/auth/types';
 
@@ -23,12 +25,22 @@ class AuthService extends HttpClient {
     return this.post<LoginSuccessResponse>('/auth/register', payload);
   }
 
+  public handleGoogleAuth(payload: { code: string; action: OAuthAction }) {
+    return this.post<LoginSuccessResponse>('/auth/google', payload);
+  }
+
   public login(payload: LoginSchema) {
     return this.post<LoginSuccessResponse>('/auth/login', payload);
   }
 
   public logout() {
     return this.delete<LoginSuccessResponse>('/auth/logout', {
+      isPrivateRoute: true,
+    });
+  }
+
+  public changePassword(payload: Omit<ChangePasswordSchema, 'confirmPassword'>) {
+    return this.patch('/auth/password', payload, {
       isPrivateRoute: true,
     });
   }

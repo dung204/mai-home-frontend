@@ -19,13 +19,25 @@ class MediaService extends HttpClient {
         folder,
       },
       isPrivateRoute: true,
-      timeout: 60000,
     });
   }
 
-  async deleteFile({ name, folder }: { name: string; folder?: string }) {
-    return this.delete('/media/delete', {
-      data: { name, folder },
+  async uploadFromUrl({ url, folder }: { url: string; folder?: string }) {
+    return this.post<Pick<MediaUploadResponse, 'data'>>(
+      '/media/upload/url',
+      {
+        url,
+        folder,
+      },
+      {
+        isPrivateRoute: true,
+      },
+    );
+  }
+
+  async deleteFile({ name }: { name: string }) {
+    return this.delete(`/media/delete`, {
+      data: { fileName: name },
       isPrivateRoute: true,
     });
   }

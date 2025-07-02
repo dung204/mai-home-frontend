@@ -1,26 +1,24 @@
-import { Avatar, AvatarFallback } from '@/base/components/ui/avatar';
 import { Card, CardContent } from '@/base/components/ui/card';
-import { Skeleton } from '@/base/components/ui/skeleton';
 
 import { UpdateProfileForm } from '../components/update-profile-form';
+import { userSchema } from '../types';
 
-export function UpdateProfilePage() {
+export async function UpdateProfilePage() {
+  const { cookies } = await import('next/headers');
+  const cookieStore = await cookies();
+  const user = userSchema
+    .omit({
+      createTimestamp: true,
+      updateTimestamp: true,
+      deleteTimestamp: true,
+    })
+    .safeParse(JSON.parse(cookieStore.get('user')?.value || '{}')).data;
+
   return (
-    <section className="mx-auto my-10 w-lg">
+    <section className="container mx-auto lg:max-w-lg!">
       <Card>
         <CardContent className="flex flex-col gap-6">
-          <div className="flex items-center gap-4">
-            <Avatar className="size-14">
-              <AvatarFallback>
-                <Skeleton className="size-full" />
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col gap-1">
-              <span className="text-base font-semibold">user1236</span>
-              <span className="text-muted-foreground text-sm">0123456789</span>
-            </div>
-          </div>
-          <UpdateProfileForm />
+          <UpdateProfileForm user={user} />
         </CardContent>
       </Card>
     </section>

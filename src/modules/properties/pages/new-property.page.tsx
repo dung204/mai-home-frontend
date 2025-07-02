@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ComponentProps, ComponentRef, useRef, useState } from 'react';
 import { z } from 'zod';
@@ -17,15 +18,21 @@ import {
 import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import { Form } from '@/base/components/ui/form';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/base/components/ui/tooltip';
 import { LocationForm } from '@/modules/location/components/location-form';
 import { ImagePayload, MediaUploadResponse, VideoPayload, mediaService } from '@/modules/media';
+import { User } from '@/modules/users';
 
 import { AreaForm } from '../components/area-form';
 import { PricePerMonthForm } from '../components/price-per-month-form';
 import { propertiesService } from '../services/properties.service';
 import { CreatePropertySchema, PropertyCategory, createPropertySchema } from '../types';
 
-export function NewPropertyPage() {
+interface NewPropertyPageProps {
+  user: Omit<User, 'createTimestamp' | 'updateTimestamp' | 'deleteTimestamp'> | undefined;
+}
+
+export function NewPropertyPage({ user }: NewPropertyPageProps) {
   const categoryFormRef = useRef<ComponentRef<typeof Form>>(null);
   const locationFormRef = useRef<ComponentRef<typeof LocationForm>>(null);
   const infoFormRef = useRef<ComponentRef<typeof Form>>(null);
@@ -176,7 +183,7 @@ export function NewPropertyPage() {
 
       try {
         imageUploadResponse = await triggerUploadFiles({
-          folder: `images/properties/${propertyId}`,
+          folder: `properties/${propertyId}/images`,
           files: imageFiles,
         });
       } catch (_err) {
@@ -191,13 +198,13 @@ export function NewPropertyPage() {
 
       property = {
         ...property,
-        images: imageUploadResponse.data.map((image) => image.url).join(','),
+        images: imageUploadResponse.data.map((image) => image.fileName).join(','),
       };
 
       if (videoFiles.length > 0) {
         try {
           videoUploadResponse = await triggerUploadFiles({
-            folder: `videos/properties/${propertyId}`,
+            folder: `properties/${propertyId}/videos`,
             files: videoFiles,
           });
         } catch (_err) {
@@ -212,7 +219,7 @@ export function NewPropertyPage() {
 
         property = {
           ...property,
-          videos: videoUploadResponse.data.map((video) => video.url).join(','),
+          videos: videoUploadResponse.data.map((video) => video.fileName).join(','),
         };
       }
 
@@ -429,13 +436,33 @@ export function NewPropertyPage() {
       </Card>
 
       <div className="flex w-full justify-center">
-        <Button
-          className="rounded-full p-6! text-base"
-          onClick={handleSubmit}
-          loading={isCreatingProperty || isUploadingFiles}
-        >
-          Đăng tin
-        </Button>
+        {user && (!user.displayName || !user.phone) ? (
+          <Tooltip open={true}>
+            <TooltipTrigger asChild>
+              <Button className="rounded-full p-6! text-base" disabled>
+                Đăng tin
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-center">
+                Vui lòng bổ sung tên liên lạc & số điện thoại trong phần <br />
+                <Link href="/user/account/profile" className="underline">
+                  Quản lý tài khoản {'>'} Cập nhật thông tin cá nhân
+                </Link>
+                <br />
+                để có thể đăng tin.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button
+            className="rounded-full p-6! text-base"
+            onClick={handleSubmit}
+            loading={isCreatingProperty || isUploadingFiles}
+          >
+            Đăng tin
+          </Button>
+        )}
       </div>
       <SuccessAlertDialog
         open={showSuccessDialog}

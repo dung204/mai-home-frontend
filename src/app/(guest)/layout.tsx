@@ -1,4 +1,5 @@
 import { HeadsetIcon } from 'lucide-react';
+import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { PropsWithChildren, Suspense } from 'react';
 
@@ -8,8 +9,19 @@ import { Card, CardContent } from '@/base/components/ui/card';
 import { ScrollArea } from '@/base/components/ui/scroll-area';
 import { ScrollToTopButton } from '@/base/components/ui/scroll-to-top-button';
 import { AuthDialogProvider } from '@/base/providers';
+import { GoogleCallbackHandler } from '@/modules/auth';
+import { userSchema } from '@/modules/users';
 
 export default async function GuestLayout({ children }: PropsWithChildren) {
+  const cookieStore = await cookies();
+  const user = userSchema
+    .omit({
+      createTimestamp: true,
+      updateTimestamp: true,
+      deleteTimestamp: true,
+    })
+    .safeParse(JSON.parse(cookieStore.get('user')?.value || '{}')).data;
+
   return (
     <AuthDialogProvider>
       <div className="flex h-screen flex-col">
@@ -55,6 +67,7 @@ export default async function GuestLayout({ children }: PropsWithChildren) {
           <ScrollToTopButton />
         </ScrollArea>
       </div>
+      <GoogleCallbackHandler user={user} />
     </AuthDialogProvider>
   );
 }

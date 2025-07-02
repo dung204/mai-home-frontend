@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import { cn } from '@/base/lib';
 import { useAuthDialog, useConfirmLogoutDialog } from '@/base/providers';
 import { User, UserAvatar } from '@/modules/users';
 
@@ -97,8 +98,20 @@ export function UserActions({ user }: UserActionsProps) {
           <div className="flex items-center gap-3">
             <UserAvatar user={user} className="size-10" />
             <div className="flex flex-col gap-1">
-              <span className="text-sm font-semibold">{user.displayName}</span>
-              <span className="text-muted-foreground text-xs">{user.phone}</span>
+              <span
+                className={cn('text-sm font-semibold', {
+                  'text-danger': !user.displayName,
+                })}
+              >
+                {user.displayName ?? 'Chưa có tên hiển thị'}
+              </span>
+              <span
+                className={cn('text-muted-foreground text-xs', {
+                  'text-danger': !user.phone,
+                })}
+              >
+                {user.phone ?? 'Chưa có số điện thoại'}
+              </span>
             </div>
           </div>
           {/* <div className="border-primary/50 bg-primary/10 flex items-center justify-between rounded-lg border-2 px-4 py-2">
@@ -149,12 +162,14 @@ export function UserActions({ user }: UserActionsProps) {
               </Button>
               Quản lý giao dịch
             </div> */}
-            <div className="flex w-max cursor-pointer items-center gap-4 font-medium">
-              <Button variant="ghost" className="bg-accent rounded-full" size="icon">
-                <UserIcon />
-              </Button>
-              Quản lý tài khoản
-            </div>
+            <Link href="/user/account/profile">
+              <div className="flex w-max cursor-pointer items-center gap-4 font-medium">
+                <Button variant="ghost" className="bg-accent rounded-full" size="icon">
+                  <UserIcon />
+                </Button>
+                Quản lý tài khoản
+              </div>
+            </Link>
             <div
               className="text-danger flex w-max cursor-pointer items-center gap-4 font-medium"
               onClick={() => setConfirmLogoutDialogOpen(true)}

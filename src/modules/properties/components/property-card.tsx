@@ -18,6 +18,7 @@ import { Button } from '@/base/components/ui/button';
 import { Card, CardContent } from '@/base/components/ui/card';
 import { Skeleton } from '@/base/components/ui/skeleton';
 import { withTooltip } from '@/base/components/ui/tooltip';
+import { envClient } from '@/base/config/env-client.config';
 
 import { Property } from '../types';
 import { PropertiesUtils } from '../utils/properties.utils';
@@ -53,12 +54,12 @@ export function HorizontalPropertyCard({ property }: PropertyCardProps) {
                     muted
                     className="size-full rounded-md bg-black/50 object-cover object-center"
                   >
-                    <source src={property.videos[0]} />
+                    <source src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${property.videos[0]}`} />
                   </video>
                 </>
               ) : (
                 <Image
-                  src={property.images[0] ?? '/placeholder-600x400.svg'}
+                  src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${property.images[0]}`}
                   alt={property.title}
                   className="size-full rounded-md bg-black/50 object-cover object-center"
                   fill
@@ -227,12 +228,12 @@ export function VerticalPropertyCard({
                 muted
                 className="size-full rounded-md rounded-b-none bg-black/50 object-cover object-center"
               >
-                <source src={property.videos[0]} />
+                <source src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${property.videos[0]}`} />
               </video>
             </>
           ) : (
             <Image
-              src={property.images[0] ?? '/placeholder-600x400.svg'}
+              src={`${envClient.NEXT_PUBLIC_ASSETS_URL}${property.images[0]}`}
               alt={property.title}
               className="rounded-md rounded-b-none bg-black/50 object-cover object-center"
               fill

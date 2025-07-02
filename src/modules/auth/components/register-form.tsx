@@ -1,9 +1,10 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { AlertCircleIcon, LockIcon, PhoneIcon, UserIcon } from 'lucide-react';
-import { useState } from 'react';
+import { Ref, useRef, useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Alert, AlertDescription, AlertTitle } from '@/base/components/ui/alert';
@@ -12,21 +13,28 @@ import { cn } from '@/base/lib';
 import { UpdateUserSchema, updateUserSchema, userService } from '@/modules/users';
 
 import { authService } from '../services/auth.service';
-import { LoginSchema, RegisterSchema, loginSchema } from '../types';
+import { RegisterSchema, loginSchema } from '../types';
 
 interface RegisterFormProps {
   onRegisterSuccess?: () => void;
+  step?: number;
   onStepChange?: (step: number) => void;
+  defaultValues?: Record<string, unknown>;
 }
 
-export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormProps) {
-  const [step, setStep] = useState(1);
-  const [registerData, setRegisterData] = useState<Partial<LoginSchema>>({});
+export function RegisterForm({
+  onRegisterSuccess,
+  onStepChange,
+  step: initialStep,
+  defaultValues,
+}: RegisterFormProps) {
+  const [step, setStep] = useState(initialStep ?? 1);
+  const step1Ref = useRef<UseFormReturn>(null);
 
   const {
-    mutateAsync: triggerRegister,
-    error: step2Error,
-    isPending: step2Loading,
+    mutate: triggerRegister,
+    error: step1Error,
+    isPending: step1Loading,
   } = useMutation({
     mutationFn: (payload: RegisterSchema) => authService.register(payload),
     onSuccess: async ({ data }) => {
@@ -41,23 +49,32 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
       });
 
       if (!data.user.phone && !data.user.displayName) {
-        setStep(3);
-        onStepChange?.(3);
+        setStep(2);
+        onStepChange?.(2);
         return;
       }
 
       if (!data.user.displayName) {
-        setStep(3.1);
-        onStepChange?.(3.1);
+        setStep(2.1);
+        onStepChange?.(2.1);
         return;
       }
 
       onRegisterSuccess?.();
     },
+    onError: (error) => {
+      if (error instanceof AxiosError && error.status === HttpStatusCode.Conflict) {
+        step1Ref.current?.setError('identifier', {
+          type: 'conflict',
+          message: 'Số điện thoại hoặc email đã được sử dụng',
+        });
+        return;
+      }
+    },
   });
 
   const {
-    mutateAsync: triggerUpdateUser,
+    mutate: triggerUpdateUser,
     error: step3Error,
     isPending: step3Loading,
   } = useMutation({
@@ -69,44 +86,36 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
     case 1:
       return (
         <RegisterStep1
-          onStepComplete={({ identifier }) => {
-            setRegisterData((prev) => ({
-              ...prev,
+          ref={step1Ref}
+          loading={step1Loading}
+          error={step1Error}
+          onStepComplete={({ identifier, password }) => {
+            triggerRegister({
               ...(identifier.includes('@') ? { email: identifier } : { phone: identifier }),
-            }));
-            setStep(2);
+              password,
+            });
           }}
+          defaultValues={defaultValues}
         />
       );
     case 2:
       return (
-        <RegisterStep2
-          loading={step2Loading}
-          error={step2Error}
-          onStepComplete={({ password }) => {
-            triggerRegister({
-              ...registerData,
-              password,
-            });
-          }}
-        />
-      );
-    case 3:
-      return (
-        <RegisterFormStep3
+        <RegisterFormStep2
           error={step3Error}
           loading={step3Loading}
           onStepComplete={(data) => triggerUpdateUser(data)}
+          defaultValues={defaultValues}
         />
       );
-    case 3.1:
+    case 2.1:
       return (
-        <RegisterFormStep31
+        <RegisterFormStep21
           loading={step3Loading}
           error={step3Error}
           onStepComplete={(data) => {
             triggerUpdateUser(data);
           }}
+          defaultValues={defaultValues}
         />
       );
     default:
@@ -114,19 +123,43 @@ export function RegisterForm({ onRegisterSuccess, onStepChange }: RegisterFormPr
   }
 }
 
-function RegisterStep1({
-  onStepComplete,
-}: {
+interface RegisterStep1Props {
+  ref?: Ref<UseFormReturn> | null;
   loading?: boolean;
-  onStepComplete?: (data: { identifier: string }) => void;
-}) {
+  error?: Error | null;
+  onStepComplete?: (data: { identifier: string; password: string }) => void;
+  defaultValues?: Record<string, unknown>;
+}
+
+function RegisterStep1({ onStepComplete, loading, error, ref, defaultValues }: RegisterStep1Props) {
   return (
     <div className="space-y-2">
+      {error && !(error instanceof AxiosError && error.status === HttpStatusCode.Conflict) && (
+        <Alert variant="danger" className="bg-danger/10">
+          <AlertCircleIcon />
+          <AlertTitle>Không thể đăng ký</AlertTitle>
+          <AlertDescription>
+            Đã xảy ra lỗi bất ngờ khi đăng ký. Vui lòng thử lại sau.
+          </AlertDescription>
+        </Alert>
+      )}
       <Form
+        ref={ref}
+        defaultValues={defaultValues}
         className="flex flex-col gap-4"
-        schema={loginSchema.pick({
-          identifier: true,
-        })}
+        loading={loading}
+        schema={loginSchema
+          .pick({
+            identifier: true,
+            password: true,
+          })
+          .extend({
+            confirmPassword: z.string().nonempty('Mật khẩu xác nhận không được để trống'),
+          })
+          .refine(({ password, confirmPassword }) => password === confirmPassword, {
+            message: 'Mật khẩu xác nhận không khớp với mật khẩu mới',
+            path: ['confirmPassword'],
+          })}
         fields={[
           {
             name: 'identifier',
@@ -149,40 +182,6 @@ function RegisterStep1({
               </>
             ),
           },
-        ]}
-        renderSubmitButton={(Button) => (
-          <Button size="lg" className="py-8 text-xl capitalize">
-            Tiếp tục
-          </Button>
-        )}
-        onSuccessSubmit={(data) => onStepComplete?.(data)}
-      />
-    </div>
-  );
-}
-
-type RegisterStep2Props = {
-  error?: Error | null;
-  loading?: boolean;
-  onStepComplete?: (data: { password: string }) => void;
-};
-
-function RegisterStep2({ loading, onStepComplete }: RegisterStep2Props) {
-  return (
-    <div className="space-y-2">
-      <Form
-        loading={loading}
-        className="flex flex-col gap-4"
-        schema={z
-          .object({
-            password: z.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự'),
-            confirmPassword: z.string().nonempty('Mật khẩu xác nhận không được để trống'),
-          })
-          .refine(({ password, confirmPassword }) => password === confirmPassword, {
-            message: 'Mật khẩu xác nhận không khớp với mật khẩu mới',
-            path: ['confirmPassword'],
-          })}
-        fields={[
           {
             name: 'password',
             type: 'password',
@@ -243,19 +242,25 @@ function RegisterStep2({ loading, onStepComplete }: RegisterStep2Props) {
             Tiếp tục
           </Button>
         )}
-        onSuccessSubmit={({ password }) => onStepComplete?.({ password })}
+        onSuccessSubmit={({ identifier, password }) => onStepComplete?.({ identifier, password })}
       />
     </div>
   );
 }
 
-type RegisterFormStep3Props = {
+type RegisterFormStep2Props = {
   error?: Error | null;
   loading?: boolean;
   onStepComplete?: (data: { displayName: string; phone: string }) => void;
+  defaultValues?: Record<string, unknown>;
 };
 
-function RegisterFormStep3({ loading, onStepComplete, error }: RegisterFormStep3Props) {
+function RegisterFormStep2({
+  loading,
+  onStepComplete,
+  error,
+  defaultValues,
+}: RegisterFormStep2Props) {
   return (
     <div className="space-y-2">
       {error && (
@@ -269,6 +274,7 @@ function RegisterFormStep3({ loading, onStepComplete, error }: RegisterFormStep3
       )}
       <Form
         loading={loading}
+        defaultValues={defaultValues}
         className="flex flex-col gap-4"
         schema={updateUserSchema
           .pick({
@@ -331,13 +337,19 @@ function RegisterFormStep3({ loading, onStepComplete, error }: RegisterFormStep3
   );
 }
 
-type RegisterFormStep31Props = {
+type RegisterFormStep21Props = {
   error?: Error | null;
   loading?: boolean;
   onStepComplete?: (data: { displayName: string }) => void;
+  defaultValues?: Record<string, unknown>;
 };
 
-function RegisterFormStep31({ loading, onStepComplete, error }: RegisterFormStep31Props) {
+function RegisterFormStep21({
+  loading,
+  onStepComplete,
+  error,
+  defaultValues,
+}: RegisterFormStep21Props) {
   return (
     <div className="space-y-2">
       {error && (
@@ -350,6 +362,7 @@ function RegisterFormStep31({ loading, onStepComplete, error }: RegisterFormStep
         </Alert>
       )}
       <Form
+        defaultValues={defaultValues}
         loading={loading}
         className="flex flex-col gap-4"
         schema={updateUserSchema

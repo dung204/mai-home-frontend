@@ -77,18 +77,36 @@ async function handleFetch(path: string[], req: Request) {
     headers: req.headers,
     ...(req.method !== 'GET' && { body: req.body, duplex: 'half' }),
   });
-  const isUpdateUser = req.method === 'PATCH' && fetchUrl.endsWith('/users/profile') && res.ok;
 
   // If this fetch is updating user profile, update the cookie as well
-  if (isUpdateUser) {
+  if (req.method === 'PATCH' && fetchUrl.endsWith('/users/profile') && res.ok) {
+    const updateUser = (await res.clone().json()).data;
+
     if (!setNewTokens) {
       return new Response(res.body, {
+        // @ts-expect-error Array of cookies does work in runtime
         headers: {
           ...Object.fromEntries(Array.from(res.headers.entries())),
-          'Set-Cookie': 'user=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+          'Set-Cookie': [
+            `user=${JSON.stringify({
+              id: updateUser.id,
+              displayName: encodeURIComponent(updateUser.displayName),
+              avatar: updateUser.avatar,
+              description: updateUser.description,
+              isVerified: updateUser.isVerified ?? JSON.parse(user ?? '{}').isVerified,
+            })}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+          ],
         },
       });
     }
+
+    user = JSON.stringify({
+      id: updateUser.id,
+      displayName: encodeURIComponent(updateUser.displayName),
+      avatar: updateUser.avatar,
+      description: updateUser.description,
+      isVerified: updateUser.isVerified,
+    });
   }
 
   if (setNewTokens) {

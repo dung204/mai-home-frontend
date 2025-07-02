@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ComponentProps } from 'react';
 
 import {
@@ -16,14 +16,15 @@ import {
 import { buttonVariantsFn } from '@/base/components/ui/button';
 
 export function ConfirmLogoutDialog(props: ComponentProps<typeof AlertDialog>) {
+  const router = useRouter();
   const pathname = usePathname();
 
   const handleLogout = async () => {
     await axios.delete('/api/auth/delete-cookie');
     if (pathname.startsWith('/user')) {
-      window.location.href = '/';
+      router.replace('/');
     } else {
-      window.location.reload();
+      router.refresh();
     }
   };
 

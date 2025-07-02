@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'res.cloudinary.com',
-        pathname: '/dmpllzq2z/image/upload/**',
+        hostname: 'assets.maihome.info.vn',
+        pathname: '/**',
         protocol: 'https',
       },
     ],
