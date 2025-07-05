@@ -1,8 +1,8 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError, HttpStatusCode } from 'axios';
-import { useSearchParams } from 'next/navigation';
+import { AxiosError, HttpStatusCode } from 'axios';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ComponentProps, useEffect, useState } from 'react';
 
 import {
@@ -26,6 +26,7 @@ interface GoogleCallbackHandlerProps {
 }
 
 export function GoogleCallbackHandler({ user }: GoogleCallbackHandlerProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
   const needCompleteProfile = searchParams.get('needCompleteProfile') === 'true';
@@ -37,23 +38,15 @@ export function GoogleCallbackHandler({ user }: GoogleCallbackHandlerProps) {
     mutationFn: (payload: { code: string; action: OAuthAction }) =>
       authService.handleGoogleAuth(payload),
     onSuccess: async ({ data }) => {
-      await axios.post('/api/auth/set-cookie', {
-        data: {
-          ...data,
-          user: {
-            ...data.user,
-            displayName: !data.user.displayName ? null : encodeURIComponent(data.user.displayName),
-          },
-        },
-      });
-
       const redirectUrl = new URL('/', window.location.origin);
 
       if (!data.user.displayName || !data.user.phone) {
         redirectUrl.searchParams.set('needCompleteProfile', 'true');
+        router.replace(redirectUrl.href);
+        return;
       }
 
-      window.location.replace(redirectUrl.href);
+      router.refresh();
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.status === HttpStatusCode.Conflict) {
