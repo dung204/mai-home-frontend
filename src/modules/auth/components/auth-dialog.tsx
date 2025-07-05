@@ -95,7 +95,12 @@ export function AuthDialog({
                   <p className="text-muted-foreground text-lg font-medium">Hoặc</p>
                   <div className="border-border w-full border"></div>
                 </div>
-                <Button variant="outline" size="lg" className="gap-4 py-8 text-base">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="gap-4 py-8 text-base"
+                  onClick={() => AuthUtils.redirectToGoogleLoginPage()}
+                >
                   <Image src="/google-logo.svg" alt="Google logo" width={34} height={34} />
                   Đăng nhập với Google
                 </Button>
