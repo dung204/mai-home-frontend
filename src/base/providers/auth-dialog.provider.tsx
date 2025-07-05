@@ -50,7 +50,6 @@ export function AuthDialogProvider({ children }: PropsWithChildren) {
     }
 
     setOpen(open);
-    router.refresh();
   };
 
   return (

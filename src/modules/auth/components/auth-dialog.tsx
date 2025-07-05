@@ -3,7 +3,6 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
 
 import { Button } from '@/base/components/ui/button';
@@ -34,7 +33,6 @@ export function AuthDialog({
   onSuccess,
   ...props
 }: AuthDialogProps) {
-  const router = useRouter();
   const isMobile = useIsMobile();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>(
     initialMode ?? 'login',
@@ -58,7 +56,7 @@ export function AuthDialog({
                           onForgotPassword={() => setMode('forgot-password')}
                           onLoginSuccess={() => {
                             onSuccess?.();
-                            router.replace(
+                            window.location.replace(
                               new URL(window.location.pathname, window.location.origin).href,
                             );
                           }}
@@ -70,7 +68,7 @@ export function AuthDialog({
                         <RegisterForm
                           onRegisterSuccess={() => {
                             onSuccess?.();
-                            router.replace(
+                            window.location.replace(
                               new URL(window.location.pathname, window.location.origin).href,
                             );
                           }}
