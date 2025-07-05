@@ -2,7 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError, HttpStatusCode } from 'axios';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { ComponentProps, useEffect, useState } from 'react';
 
 import {
@@ -26,7 +26,6 @@ interface GoogleCallbackHandlerProps {
 }
 
 export function GoogleCallbackHandler({ user }: GoogleCallbackHandlerProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
   const needCompleteProfile = searchParams.get('needCompleteProfile') === 'true';
@@ -42,11 +41,9 @@ export function GoogleCallbackHandler({ user }: GoogleCallbackHandlerProps) {
 
       if (!data.user.displayName || !data.user.phone) {
         redirectUrl.searchParams.set('needCompleteProfile', 'true');
-        router.replace(redirectUrl.href);
-        return;
       }
 
-      router.refresh();
+      window.location.replace(redirectUrl.href);
     },
     onError: (error) => {
       if (error instanceof AxiosError && error.status === HttpStatusCode.Conflict) {
