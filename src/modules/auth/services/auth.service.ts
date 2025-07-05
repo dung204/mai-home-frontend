@@ -28,7 +28,7 @@ class AuthService extends HttpClient {
   }
 
   public async handleGoogleAuth(payload: { code: string; action: OAuthAction }) {
-    const res = this.post<LoginSuccessResponse>('/auth/google', payload);
+    const res = await this.post<LoginSuccessResponse>('/auth/google', payload);
 
     await axios.post('/api/auth/set-cookie', res);
 
