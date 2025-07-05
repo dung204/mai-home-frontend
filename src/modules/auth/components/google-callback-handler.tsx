@@ -42,7 +42,7 @@ export function GoogleCallbackHandler({ user }: GoogleCallbackHandlerProps) {
           ...data,
           user: {
             ...data.user,
-            displayName: data.user.displayName && encodeURIComponent(data.user.displayName),
+            displayName: !data.user.displayName ? null : encodeURIComponent(data.user.displayName),
           },
         },
       });

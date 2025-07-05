@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { HttpClient } from '@/base/lib';
 import { CommonSearchParams, SuccessResponse } from '@/base/types';
 
@@ -14,39 +16,20 @@ class UserService extends HttpClient {
     });
   }
 
-  public updateUserProfile(payload: UpdateUserSchema) {
-    return this.patch<SuccessResponse<User>>(`/users/profile`, payload, {
+  public async updateUserProfile(payload: UpdateUserSchema) {
+    const res = await this.patch<SuccessResponse<User>>(`/users/profile`, payload, {
       isPrivateRoute: true,
     });
+
+    await axios.post('/api/auth/set-user', res.data);
+
+    return res;
   }
 
   public getAllUsers(params?: CommonSearchParams) {
     return this.get<SuccessResponse<User[]>>('/users', {
       params,
     });
-  }
-
-  public getAllDeletedUsers(params?: CommonSearchParams) {
-    return this.get<SuccessResponse<User[]>>('/users/deleted', {
-      params,
-    });
-  }
-
-  public getUserById(id: string) {
-    return this.get<SuccessResponse<User>>(`/users/${id}`);
-  }
-
-  public updateUser(id: string) {
-    return (payload: UpdateUserSchema) =>
-      this.patch<SuccessResponse<User>>(`/users/${id}`, payload);
-  }
-
-  public softDeleteUser(id: string) {
-    return this.delete(`/users/${id}`);
-  }
-
-  public restoreUser(id: string) {
-    return this.patch<SuccessResponse<User>>(`/users/restore/${id}`);
   }
 }
 

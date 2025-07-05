@@ -82,20 +82,15 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
       } catch (_err) {}
     }
 
-    const uploadPayload: UpdateUserSchema = {
+    const updatePayload: UpdateUserSchema = {
       ...(displayName === user?.displayName ? {} : { displayName }),
       ...(email === user?.email ? {} : { email }),
       ...(phone === user?.phone ? {} : { phone }),
       ...(savedAvatar ? { avatar: savedAvatar } : {}),
     };
 
-    if (Object.keys(uploadPayload).length !== 0) {
-      triggerUpdateUser({
-        displayName,
-        email,
-        phone,
-        ...(savedAvatar ? { avatar: savedAvatar } : {}),
-      });
+    if (Object.keys(updatePayload).length !== 0) {
+      triggerUpdateUser(updatePayload);
     }
   };
 

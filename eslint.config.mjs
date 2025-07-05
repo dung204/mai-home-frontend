@@ -38,6 +38,7 @@ const eslintConfig = [
     ignores: [
       '*.config.*',
       'src/app/**/{default,error,forbidden,layout,loading,not-found,page,template,unauthorized}.tsx',
+      'src/app/**/{robots,sitemap}.ts',
       '.storybook/**',
       'src/**/*.{stories,story}.{ts,tsx}',
       'src/base/i18n/**',

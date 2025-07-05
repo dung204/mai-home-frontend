@@ -50,6 +50,7 @@ export function AuthDialogProvider({ children }: PropsWithChildren) {
     }
 
     setOpen(open);
+    router.refresh();
   };
 
   return (
@@ -61,7 +62,10 @@ export function AuthDialogProvider({ children }: PropsWithChildren) {
         mode={mode}
         onModeChange={setMode}
         step={step}
-        onStepChange={setStep}
+        onStepChange={(step) => {
+          setStep(step);
+          router.refresh();
+        }}
         defaultValues={defaultValues}
         onSuccess={() => setOpen(false)}
         key={version}

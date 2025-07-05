@@ -2,11 +2,10 @@ import { decodeJwt } from 'jose';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { LoginSuccessResponse, RefreshTokenSuccessResponse } from '@/modules/auth/types';
-
-import { envServer } from './base/config/env-server.config';
-import { RouteUtils } from './base/utils';
-import { userSchema } from './modules/users/types';
+import { envServer } from '@/base/config/env-server.config';
+import { RouteUtils } from '@/base/utils';
+import { RefreshTokenSuccessResponse } from '@/modules/auth/types';
+import { userSchema } from '@/modules/users/types';
 
 export const config = {
   /**
@@ -46,9 +45,25 @@ export async function middleware(request: NextRequest) {
   } catch (_accessTokenError) {
     try {
       const payload = await handleRefreshToken(refreshToken ?? '');
+      const {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+        user: newUser,
+      } = payload.data;
 
       // For private & public routes, continue after success token refresh
-      return setCookieAndRedirect(request.nextUrl, payload);
+      // return setCookieAndRedirect(request.nextUrl, payload);
+
+      return NextResponse.next({
+        // @ts-expect-error Array of cookies does work in runtime
+        headers: {
+          'Set-Cookie': [
+            `accessToken=${newAccessToken}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+            `refreshToken=${newRefreshToken}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+            `user=${JSON.stringify({ ...newUser, displayName: !newUser.displayName ? null : encodeURIComponent(newUser.displayName) })}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+          ],
+        },
+      });
     } catch (_refreshTokenError) {
       // When refresh token is invalid, delete cookies & redirect to login page if the route is private
       if (isPrivateRoute) {
@@ -83,21 +98,6 @@ async function handleRefreshToken(refreshToken: string) {
   });
 
   return res.json() as Promise<RefreshTokenSuccessResponse>;
-}
-
-function setCookieAndRedirect(url: NextURL, payload: LoginSuccessResponse) {
-  const { accessToken, refreshToken, user } = payload.data;
-
-  return NextResponse.redirect(url, {
-    // @ts-expect-error Array of cookies does work in runtime
-    headers: {
-      'Set-Cookie': [
-        `accessToken=${accessToken}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
-        `refreshToken=${refreshToken}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
-        `user=${JSON.stringify({ ...user, displayName: encodeURIComponent(user.displayName ?? '') })}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
-      ],
-    },
-  });
 }
 
 function deleteCookieAndRedirect(url: NextURL) {

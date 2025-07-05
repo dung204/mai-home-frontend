@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { HttpClient } from '@/base/lib';
 import {
   ChangePasswordSchema,
@@ -25,18 +27,28 @@ class AuthService extends HttpClient {
     return this.post<LoginSuccessResponse>('/auth/register', payload);
   }
 
-  public handleGoogleAuth(payload: { code: string; action: OAuthAction }) {
-    return this.post<LoginSuccessResponse>('/auth/google', payload);
+  public async handleGoogleAuth(payload: { code: string; action: OAuthAction }) {
+    const res = this.post<LoginSuccessResponse>('/auth/google', payload);
+
+    await axios.post('/api/auth/set-cookie', res);
+
+    return res;
   }
 
-  public login(payload: LoginSchema) {
-    return this.post<LoginSuccessResponse>('/auth/login', payload);
+  public async login(payload: LoginSchema) {
+    const res = await this.post<LoginSuccessResponse>('/auth/login', payload);
+
+    await axios.post('/api/auth/set-cookie', res);
+
+    return res;
   }
 
-  public logout() {
-    return this.delete<LoginSuccessResponse>('/auth/logout', {
+  public async logout() {
+    await this.delete('/auth/logout', {
       isPrivateRoute: true,
     });
+
+    await axios.delete('/api/auth/delete-cookie');
   }
 
   public changePassword(payload: Omit<ChangePasswordSchema, 'confirmPassword'>) {

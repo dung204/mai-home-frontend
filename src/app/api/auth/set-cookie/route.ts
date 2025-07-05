@@ -16,7 +16,7 @@ export async function POST(request: Request) {
         'Set-Cookie': [
           `accessToken=${accessToken}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
           `refreshToken=${refreshToken}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
-          `user=${JSON.stringify(user)}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
+          `user=${JSON.stringify({ ...user, displayName: !user.displayName ? null : encodeURIComponent(user.displayName) })}; Path=/; Secure; Max-Age=31536000; HttpOnly; SameSite=Lax`,
         ],
       },
     },

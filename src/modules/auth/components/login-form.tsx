@@ -31,7 +31,7 @@ export function LoginForm({ onLoginSuccess, onForgotPassword, defaultValues }: L
           ...data,
           user: {
             ...data.user,
-            displayName: data.user.displayName && encodeURIComponent(data.user.displayName),
+            displayName: !data.user.displayName ? null : encodeURIComponent(data.user.displayName),
           },
         },
       });
