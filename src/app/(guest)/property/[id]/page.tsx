@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: property.title,
       description: property.description,
       openGraph: {
+        type: 'article',
         title: property.title,
         description: property.description,
         images: [
@@ -42,6 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         ],
       },
       twitter: {
+        card: 'summary_large_image',
         title: property.title,
         description: property.description,
         images: [`${envServer.ASSETS_URL}${property.images[0]}`],

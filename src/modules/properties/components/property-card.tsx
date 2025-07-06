@@ -69,7 +69,7 @@ export function HorizontalPropertyCard({ property }: PropertyCardProps) {
           </Link>
           <div className="flex w-full flex-col gap-4">
             <Link href={`/property/${property.id}`}>
-              <div className="text-lg font-bold">
+              <div className="h-[2lh] text-lg font-bold">
                 <span className="line-clamp-2" title={property.title}>
                   {property.title}
                 </span>

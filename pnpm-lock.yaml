@@ -133,6 +133,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.1.0)
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -190,6 +193,12 @@ importers:
       react-resizable-panels:
         specifier: ^2.1.7
         version: 2.1.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      remark-frontmatter:
+        specifier: ^5.0.0
+        version: 5.0.0
+      remark-mdx-frontmatter:
+        specifier: ^5.2.0
+        version: 5.2.0
       sonner:
         specifier: ^2.0.3
         version: 2.0.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -4611,6 +4620,12 @@ packages:
       }
     engines: { node: '>= 8' }
 
+  argparse@1.0.10:
+    resolution:
+      {
+        integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==,
+      }
+
   argparse@2.0.1:
     resolution:
       {
@@ -5935,6 +5950,13 @@ packages:
       }
     engines: { node: '>=10' }
 
+  escape-string-regexp@5.0.0:
+    resolution:
+      {
+        integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==,
+      }
+    engines: { node: '>=12' }
+
   eslint-config-next@15.2.4:
     resolution:
       {
@@ -6165,6 +6187,12 @@ packages:
         integrity: sha512-WDF+xj5rRWmD5tj6bIqRi6CkLIXbbNQUcxQHzGysQzvHmdYG2G7p/Tf0J0gpxGgkeMZNTIjT/AoSvC9Xehcgdg==,
       }
 
+  estree-util-value-to-estree@3.4.0:
+    resolution:
+      {
+        integrity: sha512-Zlp+gxis+gCfK12d3Srl2PdX2ybsEA8ZYy6vQGVQTNNYLEGRQQ56XB64bjemN8kxIKXP1nC9ip4Z+ILy9LGzvQ==,
+      }
+
   estree-util-visit@2.0.0:
     resolution:
       {
@@ -6216,6 +6244,13 @@ packages:
         integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==,
       }
     engines: { node: '>=16.17' }
+
+  extend-shallow@2.0.1:
+    resolution:
+      {
+        integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==,
+      }
+    engines: { node: '>=0.10.0' }
 
   extend@3.0.2:
     resolution:
@@ -6271,6 +6306,12 @@ packages:
     resolution:
       {
         integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==,
+      }
+
+  fault@2.0.1:
+    resolution:
+      {
+        integrity: sha512-WtySTkS4OKev5JtpHXnib4Gxiurzh5NCGvWrFaZ34m6JehfTUhKZvn9njTfw48t6JumVQOmrKqpmGcdwxnhqBQ==,
       }
 
   fdir@6.4.3:
@@ -6409,6 +6450,13 @@ packages:
         integrity: sha512-hGfm/slu0ZabnNt4oaRZ6uREyfCj6P4fT/n6A1rGV+Z0VdGXjfOhVUpkn6qVQONHGIFwmveGXyDs75+nr6FM8w==,
       }
     engines: { node: '>= 6' }
+
+  format@0.2.2:
+    resolution:
+      {
+        integrity: sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==,
+      }
+    engines: { node: '>=0.4.x' }
 
   fs-extra@10.1.0:
     resolution:
@@ -6599,6 +6647,13 @@ packages:
       {
         integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==,
       }
+
+  gray-matter@4.0.3:
+    resolution:
+      {
+        integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==,
+      }
+    engines: { node: '>=6.0' }
 
   has-bigints@1.1.0:
     resolution:
@@ -6973,6 +7028,13 @@ packages:
     engines: { node: '>=8' }
     hasBin: true
 
+  is-extendable@0.1.1:
+    resolution:
+      {
+        integrity: sha512-5BMULNob1vgFX6EjQw5izWDxrecWK9AM72rugNr0TFldMOi0fj6Jk+zeKIt0xGj4cEfQIJth4w3OKWOJ4f+AFw==,
+      }
+    engines: { node: '>=0.10.0' }
+
   is-extglob@2.1.1:
     resolution:
       {
@@ -7218,6 +7280,13 @@ packages:
         integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==,
       }
 
+  js-yaml@3.14.1:
+    resolution:
+      {
+        integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==,
+      }
+    hasBin: true
+
   js-yaml@4.1.0:
     resolution:
       {
@@ -7318,6 +7387,13 @@ packages:
       {
         integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==,
       }
+
+  kind-of@6.0.3:
+    resolution:
+      {
+        integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==,
+      }
+    engines: { node: '>=0.10.0' }
 
   language-subtag-registry@0.3.23:
     resolution:
@@ -7682,6 +7758,12 @@ packages:
         integrity: sha512-uZhTV/8NBuw0WHkPTrCqDOl0zVe1BIng5ZtHoDk49ME1qqcjYmmLmOf0gELgcRMxN4w2iuIeVso5/6QymSrgmA==,
       }
 
+  mdast-util-frontmatter@2.0.1:
+    resolution:
+      {
+        integrity: sha512-LRqI9+wdgC25P0URIJY9vwocIzCcksduHQ9OF2joxQoyTNVduwLAFUzjoopuRJbJAReaKrNQKAZKL3uCMugWJA==,
+      }
+
   mdast-util-mdx-expression@2.0.1:
     resolution:
       {
@@ -7767,6 +7849,12 @@ packages:
     resolution:
       {
         integrity: sha512-RDBrHEMSxVFLg6xvnXmb1Ayr2WzLAWjeSATAoxwKYJV94TeNavgoIdA0a9ytzDSVzBy2YKFK+emCPOEibLeCrg==,
+      }
+
+  micromark-extension-frontmatter@2.0.0:
+    resolution:
+      {
+        integrity: sha512-C4AkuM3dA58cgZha7zVnuVxBhDsbttIMiytjgsM2XbHAB2faRVaHRle40558FBN+DJcrLNCoqG5mlrpdU4cRtg==,
       }
 
   micromark-extension-mdx-expression@3.0.1:
@@ -9089,6 +9177,18 @@ packages:
       }
     engines: { node: '>= 0.10' }
 
+  remark-frontmatter@5.0.0:
+    resolution:
+      {
+        integrity: sha512-XTFYvNASMe5iPN0719nPrdItC9aU0ssC4v14mH1BCi1u0n1gAocqcujWUrByftZTbLhRtiKRyjYTSIOcr69UVQ==,
+      }
+
+  remark-mdx-frontmatter@5.2.0:
+    resolution:
+      {
+        integrity: sha512-U/hjUYTkQqNjjMRYyilJgLXSPF65qbLPdoESOkXyrwz2tVyhAnm4GUKhfXqOOS9W34M3545xEMq+aMpHgVjEeQ==,
+      }
+
   remark-mdx@3.1.0:
     resolution:
       {
@@ -9286,6 +9386,13 @@ packages:
       }
     engines: { node: '>= 10.13.0' }
 
+  section-matter@1.0.0:
+    resolution:
+      {
+        integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==,
+      }
+    engines: { node: '>=4' }
+
   semver@6.3.1:
     resolution:
       {
@@ -9481,6 +9588,12 @@ packages:
       }
     engines: { node: '>= 10.x' }
 
+  sprintf-js@1.0.3:
+    resolution:
+      {
+        integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==,
+      }
+
   stable-hash@0.0.5:
     resolution:
       {
@@ -9637,6 +9750,13 @@ packages:
         integrity: sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==,
       }
     engines: { node: '>=12' }
+
+  strip-bom-string@1.0.0:
+    resolution:
+      {
+        integrity: sha512-uCC2VHvQRYu+lMh4My/sFNmF2klFymLX1wHJeXnbEJERpV/ZsVuonzerjfrGpIGF7LBVa1O7i9kjiWvJiFck8g==,
+      }
+    engines: { node: '>=0.10.0' }
 
   strip-bom@3.0.0:
     resolution:
@@ -9843,6 +9963,12 @@ packages:
       }
     engines: { node: '>=8.0' }
 
+  toml@3.0.0:
+    resolution:
+      {
+        integrity: sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==,
+      }
+
   trim-lines@3.0.1:
     resolution:
       {
@@ -10035,6 +10161,12 @@ packages:
     resolution:
       {
         integrity: sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==,
+      }
+
+  unist-util-mdx-define@1.1.2:
+    resolution:
+      {
+        integrity: sha512-9ncH7i7TN5Xn7/tzX5bE3rXgz1X/u877gYVAUB3mLeTKYJmQHmqKTDBi6BTGXV7AeolBCI9ErcVsOt2qryoD0g==,
       }
 
   unist-util-position-from-estree@2.0.0:
@@ -13492,6 +13624,10 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
+  argparse@1.0.10:
+    dependencies:
+      sprintf-js: 1.0.3
+
   argparse@2.0.1: {}
 
   aria-hidden@1.2.4:
@@ -14401,6 +14537,8 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
+  escape-string-regexp@5.0.0: {}
+
   eslint-config-next@15.2.4(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2):
     dependencies:
       '@next/eslint-plugin-next': 15.2.4
@@ -14643,6 +14781,10 @@ snapshots:
       astring: 1.9.0
       source-map: 0.7.4
 
+  estree-util-value-to-estree@3.4.0:
+    dependencies:
+      '@types/estree': 1.0.7
+
   estree-util-visit@2.0.0:
     dependencies:
       '@types/estree-jsx': 1.0.5
@@ -14677,6 +14819,10 @@ snapshots:
       signal-exit: 4.1.0
       strip-final-newline: 3.0.0
 
+  extend-shallow@2.0.1:
+    dependencies:
+      is-extendable: 0.1.1
+
   extend@3.0.2: {}
 
   fast-deep-equal@3.1.3: {}
@@ -14708,6 +14854,10 @@ snapshots:
   fastq@1.19.1:
     dependencies:
       reusify: 1.1.0
+
+  fault@2.0.1:
+    dependencies:
+      format: 0.2.2
 
   fdir@6.4.3(picomatch@4.0.2):
     optionalDependencies:
@@ -14799,6 +14949,8 @@ snapshots:
       combined-stream: 1.0.8
       es-set-tostringtag: 2.1.0
       mime-types: 2.1.35
+
+  format@0.2.2: {}
 
   fs-extra@10.1.0:
     dependencies:
@@ -14907,6 +15059,13 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
+
+  gray-matter@4.0.3:
+    dependencies:
+      js-yaml: 3.14.1
+      kind-of: 6.0.3
+      section-matter: 1.0.0
+      strip-bom-string: 1.0.0
 
   has-bigints@1.1.0: {}
 
@@ -15153,6 +15312,8 @@ snapshots:
 
   is-docker@2.2.1: {}
 
+  is-extendable@0.1.1: {}
+
   is-extglob@2.1.1: {}
 
   is-finalizationregistry@1.1.1:
@@ -15278,6 +15439,11 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
+  js-yaml@3.14.1:
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
+
   js-yaml@4.1.0:
     dependencies:
       argparse: 2.0.1
@@ -15322,6 +15488,8 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  kind-of@6.0.3: {}
 
   language-subtag-registry@0.3.23: {}
 
@@ -15522,6 +15690,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  mdast-util-frontmatter@2.0.1:
+    dependencies:
+      '@types/mdast': 4.0.4
+      devlop: 1.1.0
+      escape-string-regexp: 5.0.0
+      mdast-util-from-markdown: 2.0.2
+      mdast-util-to-markdown: 2.1.2
+      micromark-extension-frontmatter: 2.0.0
+    transitivePeerDependencies:
+      - supports-color
+
   mdast-util-mdx-expression@2.0.1:
     dependencies:
       '@types/estree-jsx': 1.0.5
@@ -15634,6 +15813,13 @@ snapshots:
       micromark-util-normalize-identifier: 2.0.1
       micromark-util-resolve-all: 2.0.1
       micromark-util-subtokenize: 2.1.0
+      micromark-util-symbol: 2.0.1
+      micromark-util-types: 2.0.2
+
+  micromark-extension-frontmatter@2.0.0:
+    dependencies:
+      fault: 2.0.1
+      micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
       micromark-util-types: 2.0.2
 
@@ -16546,6 +16732,24 @@ snapshots:
 
   relateurl@0.2.7: {}
 
+  remark-frontmatter@5.0.0:
+    dependencies:
+      '@types/mdast': 4.0.4
+      mdast-util-frontmatter: 2.0.1
+      micromark-extension-frontmatter: 2.0.0
+      unified: 11.0.5
+    transitivePeerDependencies:
+      - supports-color
+
+  remark-mdx-frontmatter@5.2.0:
+    dependencies:
+      '@types/mdast': 4.0.4
+      estree-util-value-to-estree: 3.4.0
+      toml: 3.0.0
+      unified: 11.0.5
+      unist-util-mdx-define: 1.1.2
+      yaml: 2.7.1
+
   remark-mdx@3.1.0:
     dependencies:
       mdast-util-mdx: 3.0.0
@@ -16673,6 +16877,11 @@ snapshots:
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
       ajv-keywords: 5.1.0(ajv@8.17.1)
+
+  section-matter@1.0.0:
+    dependencies:
+      extend-shallow: 2.0.1
+      kind-of: 6.0.3
 
   semver@6.3.1: {}
 
@@ -16841,6 +17050,8 @@ snapshots:
 
   split2@4.2.0: {}
 
+  sprintf-js@1.0.3: {}
+
   stable-hash@0.0.5: {}
 
   stackframe@1.3.4: {}
@@ -16976,6 +17187,8 @@ snapshots:
     dependencies:
       ansi-regex: 6.1.0
 
+  strip-bom-string@1.0.0: {}
+
   strip-bom@3.0.0: {}
 
   strip-final-newline@3.0.0: {}
@@ -17069,6 +17282,8 @@ snapshots:
   to-regex-range@5.0.1:
     dependencies:
       is-number: 7.0.0
+
+  toml@3.0.0: {}
 
   trim-lines@3.0.1: {}
 
@@ -17188,6 +17403,16 @@ snapshots:
   unist-util-is@6.0.0:
     dependencies:
       '@types/unist': 3.0.3
+
+  unist-util-mdx-define@1.1.2:
+    dependencies:
+      '@types/estree': 1.0.7
+      '@types/hast': 3.0.4
+      '@types/mdast': 4.0.4
+      estree-util-is-identifier-name: 3.0.0
+      estree-util-scope: 1.0.0
+      estree-walker: 3.0.3
+      vfile: 6.0.3
 
   unist-util-position-from-estree@2.0.0:
     dependencies:

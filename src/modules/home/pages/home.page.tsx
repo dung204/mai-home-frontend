@@ -18,7 +18,7 @@ import {
 } from '@/modules/properties';
 import { userSchema } from '@/modules/users';
 
-import { LatestPosts } from '../components/latest-posts';
+import { LatestNews } from '../components/latest-news';
 
 export async function HomePage() {
   const cookieStore = await cookies();
@@ -55,7 +55,7 @@ export async function HomePage() {
         </div>
       </section>
       <div className="container m-auto flex flex-col gap-16 xl:max-w-6xl!">
-        <LatestPosts />
+        <LatestNews />
         <Suspense fallback={<TopRentedRoomsSkeleton />}>
           <TopRentedRooms />
         </Suspense>
@@ -149,7 +149,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
       <div className="container m-auto flex flex-col gap-16 xl:max-w-6xl!">
-        <LatestPosts />
+        <LatestNews />
         <TopRentedRoomsSkeleton />
         <TopWholeHousesSkeleton />
         <TopApartmentsSkeleton />

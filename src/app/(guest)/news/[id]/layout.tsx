@@ -1,6 +1,5 @@
 import { PropsWithChildren, Suspense } from 'react';
 
-import { Card, CardContent } from '@/base/components/ui/card';
 import { HighlightedNews } from '@/modules/properties/components/highlighted-news';
 import {
   HighlightedProperties,
@@ -16,15 +15,7 @@ export default function NewsLayout({ children }: PropsWithChildren) {
     <div className="container m-auto mt-12 flex flex-col gap-16 xl:max-w-6xl!">
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-2">
-          <section>
-            <Card>
-              <CardContent>
-                <article className="prose prose-blockquote:border-primary prose-blockquote:text-muted-foreground mx-auto size-full">
-                  {children}
-                </article>
-              </CardContent>
-            </Card>
-          </section>
+          {children}
           <Suspense fallback={<RecommendedPropertiesSkeleton />}>
             <RecommendedProperties />
           </Suspense>

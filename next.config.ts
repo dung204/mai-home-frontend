@@ -1,6 +1,7 @@
 import createMDX from '@next/mdx';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
+import remarkFrontmatter from 'remark-frontmatter';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -15,9 +16,17 @@ const nextConfig: NextConfig = {
   },
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   output: 'standalone',
+  experimental: {
+    mdxRs: false,
+  },
 };
 
-const withMDX = createMDX({});
+const withMDX = createMDX({
+  extension: /\.(md|mdx)$/,
+  options: {
+    remarkPlugins: [remarkFrontmatter],
+  },
+});
 
 const withNextIntl = createNextIntlPlugin({
   requestConfig: './src/base/i18n/request.ts',
