@@ -64,7 +64,7 @@ export function AllNewsPage({ searchParams }: AllNewsPageProps) {
 
       return newsCategory === category;
     })
-    .slice((page ?? 1 - 1) * 6, page ?? 1 * 6)
+    .slice(((page ?? 1) - 1) * 6, (page ?? 1) * 6)
     .map((news) => {
       const {
         data: { title, description, category, date },
