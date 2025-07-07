@@ -1,29 +1,62 @@
+import axios from 'axios';
 import * as fs from 'fs/promises';
 import type { MetadataRoute } from 'next';
 import { join } from 'path';
+
+import { envServer } from '@/base/config/env-server.config';
+import { PropertyCategory } from '@/modules/properties';
+
+export const revalidate = 60;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = (await fs.readdir(join(process.cwd(), './src/news/'))).map((file) =>
     file.replace(/\.mdx?$/, ''),
   );
 
+  const propertyIdsRes = await axios.get(`${envServer.API_URL}properties/ids`);
+  const propertyIds = propertyIdsRes.data.data as string[];
+
   return [
     {
-      url: 'https://maihome.info.com',
+      url: 'https://www.maihome.info.com',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://maihome.info.com/properties',
+      url: 'https://www.maihome.info.com/properties',
       lastModified: new Date(),
       changeFrequency: 'always',
-      priority: 0.8,
+      priority: 0.9,
+    },
+    ...propertyIds.map(
+      (id) =>
+        ({
+          url: `https://www.maihome.info.com/property/${id}`,
+          lastModified: new Date(),
+          changeFrequency: 'monthly',
+          priority: 0.9,
+        }) satisfies MetadataRoute.Sitemap[number],
+    ),
+    ...Object.values(PropertyCategory).map(
+      (category) =>
+        ({
+          url: `https://www.maihome.info.com/properties?category=${category}`,
+          lastModified: new Date(),
+          changeFrequency: 'always',
+          priority: 0.8,
+        }) satisfies MetadataRoute.Sitemap[number],
+    ),
+    {
+      url: 'https://www.maihome.info.com/news/all',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.6,
     },
     ...posts.map(
       (post) =>
         ({
-          url: `https://maihome.info.com/news/${post}`,
+          url: `https://www.maihome.info.com/news/${post}`,
           lastModified: new Date(),
           changeFrequency: 'never',
           priority: 0.6,

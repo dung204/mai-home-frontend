@@ -1,4 +1,5 @@
 import { HeadsetIcon } from 'lucide-react';
+import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { PropsWithChildren, Suspense } from 'react';
@@ -10,7 +11,37 @@ import { ScrollArea } from '@/base/components/ui/scroll-area';
 import { ScrollToTopButton } from '@/base/components/ui/scroll-to-top-button';
 import { AuthDialogProvider } from '@/base/providers';
 import { GoogleCallbackHandler } from '@/modules/auth';
+import { cities, districts, wards } from '@/modules/location';
 import { userSchema } from '@/modules/users';
+
+export const metadata: Metadata = {
+  keywords: [
+    'Mai Home',
+    'maihome',
+    'mai home',
+    'maihome.info.vn',
+    'trọ',
+    'nhà trọ',
+    'phòng trọ',
+    'chung cư',
+    'chung cư mini',
+    'nhà cho thuê',
+    'cho thuê nhà',
+    'nhà nguyên căn',
+    'ở ghép',
+    'cho thuê phòng',
+    'cho thuê nhà',
+    'cho thuê trọ',
+    'cho thuê nhà trọ',
+    'cho thuê phòng trọ',
+    'cho thuê phòng trọ giá rẻ',
+    'cho thuê phòng trọ sinh viên',
+    ...cities.map((city) => `cho thuê phòng trọ tại ${city}`),
+    ...districts.map((district) => `cho thuê phòng trọ tại ${district}`),
+    ...wards.map((ward) => `cho thuê phòng trọ tại ${ward}`),
+  ],
+  category: 'website',
+};
 
 export default async function GuestLayout({ children }: PropsWithChildren) {
   const cookieStore = await cookies();
