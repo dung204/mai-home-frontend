@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/user/',
     },
-    sitemap: 'https://maihome.info.vn/sitemap.xml',
+    sitemap: 'https://www.maihome.info.vn/sitemap.xml',
   };
 }
